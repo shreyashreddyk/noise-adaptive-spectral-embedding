@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 from scipy.sparse import csr_matrix
 
-from nase.graphs.normalisation import alpha_normalise, row_normalise
+from nase.graphs.normalisations import alpha_normalise, row_normalise
 from nase.spectral.eigensolvers import top_eigs_symmetric
 
 
