@@ -22,9 +22,11 @@ def test_runner_writes_expected_output_manifest(tmp_path: Path) -> None:
 
     plot_names = {p.name for p in (result.run_dir / "plots").iterdir()}
     assert "spectrum.png" in plot_names
+    assert "eigengap.png" in plot_names
     assert "stability.png" in plot_names
     assert "stability_heatmap.png" in plot_names
     assert "embedding.png" in plot_names
+    assert "embedding_3d.png" in plot_names
     assert "ablation_cutoff.png" in plot_names
 
     payload = json.loads((result.run_dir / "diagnostics.json").read_text(encoding="utf-8"))
