@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import numpy as np
+
 from nase.config import ExperimentConfig
 from nase.experiments.runner import run_experiment
 
@@ -18,17 +20,21 @@ def test_runner_writes_expected_output_manifest(tmp_path: Path) -> None:
 
     assert (result.run_dir / "config.yaml").exists()
     assert (result.run_dir / "metrics.json").exists()
-    assert (result.run_dir / "diagnostics.json").exists()
+    assert (result.run_dir / "cutoffs.json").exists()
+    assert (result.run_dir / "arrays.npz").exists()
 
-    plot_names = {p.name for p in (result.run_dir / "plots").iterdir()}
-    assert "spectrum.png" in plot_names
-    assert "eigengap.png" in plot_names
-    assert "stability.png" in plot_names
-    assert "stability_heatmap.png" in plot_names
-    assert "embedding.png" in plot_names
-    assert "embedding_3d.png" in plot_names
-    assert "ablation_cutoff.png" in plot_names
+    figure_names = {p.name for p in (result.run_dir / "figures").iterdir()}
+    assert "spectrum.png" in figure_names
+    assert "eigengap.png" in figure_names
+    assert "stability.png" in figure_names
+    assert "stability_heatmap.png" in figure_names
+    assert "embedding.png" in figure_names
+    assert "embedding_3d.png" in figure_names
+    assert "ablation_cutoff.png" in figure_names
 
-    payload = json.loads((result.run_dir / "diagnostics.json").read_text(encoding="utf-8"))
-    assert "metadata" in payload
-    assert "stability" in payload
+    metrics = json.loads((result.run_dir / "metrics.json").read_text(encoding="utf-8"))
+    cutoffs = json.loads((result.run_dir / "cutoffs.json").read_text(encoding="utf-8"))
+    arrays = np.load(result.run_dir / "arrays.npz")
+    assert "k_oracle" in metrics
+    assert "oracle_k" in cutoffs
+    assert "x_clean" in arrays

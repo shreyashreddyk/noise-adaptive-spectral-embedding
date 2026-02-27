@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -69,8 +70,12 @@ def _validate_config(config: ExperimentConfig) -> None:
 
 
 def load_config(path: Path) -> ExperimentConfig:
+    suffix = path.suffix.lower()
     with path.open("r", encoding="utf-8") as handle:
-        raw = yaml.safe_load(handle) or {}
+        if suffix == ".json":
+            raw = json.load(handle) or {}
+        else:
+            raw = yaml.safe_load(handle) or {}
 
     config = _build_config(raw)
     _validate_config(config)

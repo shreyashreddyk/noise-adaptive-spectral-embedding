@@ -1,0 +1,28 @@
+name: smoke_small
+output_root: results
+data:
+  manifold: circle
+  n_samples: 120
+  ambient_dim: 3
+  noise_std: 0.05
+  seed: 42
+graph:
+  epsilon: 1.0
+  epsilon_grid: [0.7, 1.0, 1.4]
+  use_knn: false
+  knn_k: 20
+  sparse_threshold_n: 1000
+spectral:
+  n_eigs: 10
+  diffusion_time: 1
+  alpha: 0.5
+cutoff:
+  method: bandwidth_stability
+  eigengap_min_k: 1
+  eigengap_max_k: 6
+  stability_min_k: 1
+  stability_max_k: 6
+  stability_threshold: 0.9
+plot:
+  dpi: 120
+  formats: [png]

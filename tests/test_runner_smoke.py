@@ -16,4 +16,5 @@ def test_runner_smoke(tmp_path: Path) -> None:
     result = run_experiment(cfg)
     assert result.run_dir.exists()
     assert (result.run_dir / "metrics.json").exists()
-    assert (result.run_dir / "diagnostics.json").exists()
+    assert (result.run_dir / "cutoffs.json").exists()
+    assert (result.run_dir / "arrays.npz").exists()

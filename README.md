@@ -27,19 +27,19 @@ Run a stability experiment:
 python -m nase run --config configs/swiss_roll_stability.yaml
 ```
 
-Run an eigengap baseline in an ambiguous-gap regime:
+Run a circle/sphere noise sweep (varying known noise level `r`):
 
 ```bash
-python -m nase run --config configs/ambiguous_gap_baseline.yaml
+python -m nase sweep --config configs/noise_sweep_circle_sphere.yaml
 ```
 
-Run a synthetic sweep with multi-seed aggregation:
+Run an eigengap-ambiguous suite comparing eigengap vs stability:
 
 ```bash
-python -m nase sweep --config configs/synthetic_noise_sweep.yaml
+python -m nase sweep --config configs/eigengap_ambiguous_suite.yaml
 ```
 
-List generated plot files for a run:
+Regenerate figures for an existing run:
 
 ```bash
 python -m nase plot --run-dir results/<timestamp>_<run_name>
@@ -51,9 +51,10 @@ Each run writes a timestamped folder under `results/` with:
 
 - `config.yaml`
 - `metrics.json`
-- `diagnostics.json`
-- `plots/*.png`
-- `plots/*.svg`
+- `cutoffs.json`
+- `arrays.npz` (compressed NumPy arrays)
+- `figures/*.png`
+- `figures/*.svg`
 
 Sweep runs additionally write:
 
@@ -76,10 +77,8 @@ Sweep runs additionally write:
 | Config | Purpose | Expected insight |
 |---|---|---|
 | `configs/swiss_roll_stability.yaml` | Single-run bandwidth stability | Baseline `k*` from stable modes |
-| `configs/ambiguous_gap_baseline.yaml` | Single-run eigengap baseline | Gap ambiguity under noise |
-| `configs/synthetic_noise_sweep.yaml` | Multi-seed noise sweep | `k*` sensitivity to additive noise |
-| `configs/synthetic_bandwidth_sweep.yaml` | Multi-seed bandwidth sweep | Robustness across epsilon ranges |
-| `configs/ambiguous_gap_suite.yaml` | Method comparison suite | Eigengap vs stability in ambiguous settings |
+| `configs/noise_sweep_circle_sphere.yaml` | Multi-seed noise sweep over `r` on circle/sphere | `k*` sensitivity to known additive noise |
+| `configs/eigengap_ambiguous_suite.yaml` | Eigengap-ambiguous method comparison suite | Why stability helps when eigengaps are ambiguous |
 
 ## Reproducibility and Quality
 

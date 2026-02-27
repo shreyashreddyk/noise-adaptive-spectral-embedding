@@ -19,12 +19,12 @@ def test_plot_from_results_regenerates_plots(tmp_path: Path) -> None:
     cfg.cutoff.stability_max_k = 5
     result = run_experiment(cfg)
 
-    regen_dir = result.run_dir / "plots_regen"
+    regen_dir = result.run_dir / "figures_regen"
     runner = CliRunner()
     completed = runner.invoke(
         app,
         [
-            "plot-from-results",
+            "plot",
             "--run-dir",
             str(result.run_dir),
             "--output-dir",

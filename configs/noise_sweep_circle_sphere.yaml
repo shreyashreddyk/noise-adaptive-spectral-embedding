@@ -1,0 +1,41 @@
+name: noise_sweep_circle_sphere
+output_root: results
+base_config: synthetic_plan_base.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: circle_r_0p02
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.02
+  - name: circle_r_0p08
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+  - name: circle_r_0p16
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.16
+  - name: sphere_r_0p02
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.02
+  - name: sphere_r_0p08
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.08
+  - name: sphere_r_0p16
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.16
