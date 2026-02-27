@@ -23,6 +23,7 @@ from nase.plots.ablations import plot_cutoff_ablation
 from nase.plots.embeddings import plot_embedding_2d, plot_embedding_3d
 from nase.plots.spectrum import plot_eigengap, plot_spectrum
 from nase.plots.stability import plot_stability_heatmap, plot_stability_scores
+from nase.robust.dss import maybe_doubly_stochastic_scale
 from nase.spectral.embedding import diffusion_map_embedding, diffusion_operator
 
 
@@ -62,6 +63,16 @@ def _compute_operator(points: np.ndarray, epsilon: float, config: ExperimentConf
         sparse_threshold_n=config.graph.sparse_threshold_n,
     )
     affinity = gaussian_kernel(distances=distances, epsilon=epsilon)
+    if config.graph.enable_dss:
+        if not isinstance(affinity, np.ndarray):
+            affinity = affinity.toarray()
+        affinity = maybe_doubly_stochastic_scale(
+            affinity,
+            enabled=True,
+            max_iter=config.graph.dss_max_iter,
+            tol=config.graph.dss_tol,
+            min_value=config.graph.dss_min_value,
+        )
     operator = diffusion_operator(affinity=affinity, alpha=config.spectral.alpha)
     if not isinstance(operator, np.ndarray):
         operator = operator.toarray()

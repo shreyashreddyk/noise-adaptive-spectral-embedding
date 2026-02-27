@@ -43,6 +43,12 @@ def _validate_config(config: ExperimentConfig) -> None:
         raise ValueError("graph.epsilon_grid must not be empty")
     if any(e <= 0 for e in config.graph.epsilon_grid):
         raise ValueError("graph.epsilon_grid values must be > 0")
+    if config.graph.dss_max_iter <= 0:
+        raise ValueError("graph.dss_max_iter must be > 0")
+    if config.graph.dss_tol <= 0:
+        raise ValueError("graph.dss_tol must be > 0")
+    if config.graph.dss_min_value <= 0:
+        raise ValueError("graph.dss_min_value must be > 0")
 
     if config.spectral.n_eigs < 2:
         raise ValueError("spectral.n_eigs must be >= 2")

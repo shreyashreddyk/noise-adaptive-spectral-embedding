@@ -3,6 +3,8 @@ from __future__ import annotations
 import numpy as np
 from scipy.sparse import csr_matrix, diags, eye
 
+from nase.robust.dss import maybe_doubly_stochastic_scale
+
 
 def row_normalise_dense(affinity: np.ndarray) -> np.ndarray:
     row_sums = affinity.sum(axis=1, keepdims=True)
@@ -51,6 +53,34 @@ def markov_matrix(affinity: np.ndarray | csr_matrix, alpha: float = 0.5) -> np.n
     sum to one. For diffusion maps, `alpha=0.5` is a common practical default.
     """
     return row_normalise(alpha_normalise(affinity=affinity, alpha=alpha))
+
+
+def markov_matrix_with_optional_dss(
+    affinity: np.ndarray | csr_matrix,
+    *,
+    alpha: float = 0.5,
+    enable_dss: bool = False,
+    dss_max_iter: int = 500,
+    dss_tol: float = 1e-6,
+    dss_min_value: float = 1e-12,
+) -> np.ndarray | csr_matrix:
+    """Build Markov matrix with optional doubly-stochastic pre-scaling.
+
+    This keeps the current NASE default intact (`enable_dss=False`).
+    When enabled, the affinity is first Sinkhorn-scaled to approximate doubly
+    stochastic structure, then standard alpha + row normalization is applied.
+    """
+    working = affinity
+    if enable_dss:
+        dense = working.toarray() if isinstance(working, csr_matrix) else np.asarray(working, dtype=float)
+        working = maybe_doubly_stochastic_scale(
+            dense,
+            enabled=True,
+            max_iter=dss_max_iter,
+            tol=dss_tol,
+            min_value=dss_min_value,
+        )
+    return markov_matrix(affinity=working, alpha=alpha)
 
 
 def laplacian_eigenmaps_matrices(

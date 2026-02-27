@@ -21,6 +21,10 @@ class GraphConfig:
     use_knn: bool = False
     knn_k: int = 20
     sparse_threshold_n: int = 2000
+    enable_dss: bool = False
+    dss_max_iter: int = 500
+    dss_tol: float = 1e-6
+    dss_min_value: float = 1e-12
 
 
 @dataclass(slots=True)
