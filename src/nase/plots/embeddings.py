@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 import numpy as np
@@ -73,7 +74,9 @@ def _scatter_colour_3d(
             cmap = plt.get_cmap("tab10")
             for idx, cls in enumerate(classes):
                 mask = numeric == cls
-                ax.scatter(x[mask], y[mask], z[mask], s=10, color=cmap(idx % 10), label=str(int(cls)))
+                ax.scatter(
+                    x[mask], y[mask], z[mask], s=10, color=cmap(idx % 10), label=str(int(cls))
+                )
             ax.legend(loc="best", title="Class")
             return
         scatter = ax.scatter(x, y, z, c=numeric, s=10, cmap="viridis")
@@ -98,7 +101,9 @@ def plot_embedding_2d(
     emb = _prepare_embedding(embedding, dims=2)
     col = np.asarray(colour).reshape(-1)
     fig, ax = plt.subplots(figsize=(6, 5))
-    _scatter_colour_2d(ax=ax, fig=fig, x=emb[:, 0], y=emb[:, 1], colour=col, colorbar_label=colorbar_label)
+    _scatter_colour_2d(
+        ax=ax, fig=fig, x=emb[:, 0], y=emb[:, 1], colour=col, colorbar_label=colorbar_label
+    )
     ax.set_title("Diffusion-map embedding (2D)")
     ax.set_xlabel("Component 1")
     ax.set_ylabel("Component 2")

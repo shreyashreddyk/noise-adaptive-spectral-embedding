@@ -48,8 +48,8 @@ def geodesic_consistency_score(
         raise ValueError("Need at least 3 samples to compute geodesic consistency.")
 
     n_neighbors_eff = int(np.clip(n_neighbors, 1, n_samples - 1))
-    knn_graph = NearestNeighbors(n_neighbors=n_neighbors_eff).fit(ref).kneighbors_graph(
-        mode="distance"
+    knn_graph = (
+        NearestNeighbors(n_neighbors=n_neighbors_eff).fit(ref).kneighbors_graph(mode="distance")
     )
     geodesic_dists = shortest_path(knn_graph, directed=False, unweighted=False)
     emb_dists = pairwise_distances(emb)

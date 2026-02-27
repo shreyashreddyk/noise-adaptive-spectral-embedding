@@ -28,9 +28,7 @@ def plot(
     run_dir: Annotated[Path, typer.Option(..., exists=True, file_okay=False)],
     output_dir: Annotated[Path | None, typer.Option(file_okay=False)] = None,
     dpi: Annotated[int | None, typer.Option(min=1)] = None,
-    formats: Annotated[
-        str | None, typer.Option(help="Comma-separated list from: png,svg")
-    ] = None,
+    formats: Annotated[str | None, typer.Option(help="Comma-separated list from: png,svg")] = None,
 ) -> None:
     """Regenerate figure artefacts for a saved run directory."""
     selected_formats: list[str] | None = None

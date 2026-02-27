@@ -4,7 +4,6 @@ import numpy as np
 from scipy.sparse import csr_matrix
 
 from nase.spectral.embedding import diffusion_map_embedding as _diffusion_map_embedding
-from nase.spectral.embedding import diffusion_operator
 
 
 def diffusion_map_embedding(

@@ -35,7 +35,9 @@ def gaussian_kernel_dense(
     symmetric: bool,
 ) -> np.ndarray:
     if local_scaling:
-        scales_sq = _dense_local_scales_from_sq_distances(distances_sq=distances_sq, local_k=local_k)
+        scales_sq = _dense_local_scales_from_sq_distances(
+            distances_sq=distances_sq, local_k=local_k
+        )
         denom = epsilon * np.sqrt(np.outer(scales_sq, scales_sq))
         denom[denom <= 0.0] = 1.0
         affinity = np.exp(-distances_sq / denom)
@@ -59,7 +61,9 @@ def gaussian_kernel_sparse(
 ) -> csr_matrix:
     if local_scaling:
         scales_sq = _sparse_local_scales_from_sq_distances(distances_sq=distances_sq)
-        row_scales = scales_sq[np.repeat(np.arange(distances_sq.shape[0]), np.diff(distances_sq.indptr))]
+        row_scales = scales_sq[
+            np.repeat(np.arange(distances_sq.shape[0]), np.diff(distances_sq.indptr))
+        ]
         col_scales = scales_sq[distances_sq.indices]
         denom = epsilon * np.sqrt(row_scales * col_scales)
         denom[denom <= 0.0] = 1.0
@@ -67,7 +71,9 @@ def gaussian_kernel_sparse(
     else:
         data = np.exp(-distances_sq.data / epsilon)
 
-    affinity = csr_matrix((data, distances_sq.indices, distances_sq.indptr), shape=distances_sq.shape)
+    affinity = csr_matrix(
+        (data, distances_sq.indices, distances_sq.indptr), shape=distances_sq.shape
+    )
     if symmetric:
         affinity = (affinity + affinity.T) * 0.5
     if zero_diagonal:

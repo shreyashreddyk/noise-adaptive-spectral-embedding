@@ -80,15 +80,11 @@ def _sample_torus(
     if major_radius <= 0.0 or minor_radius <= 0.0:
         raise ValueError("Expected torus radii to be positive.")
     if major_radius <= minor_radius:
-        raise ValueError(
-            "Expected major_radius > minor_radius for a non-self-intersecting torus."
-        )
+        raise ValueError("Expected major_radius > minor_radius for a non-self-intersecting torus.")
     theta = rng.uniform(0.0, 2.0 * np.pi, size=n)
     phi = rng.uniform(0.0, 2.0 * np.pi, size=n)
     ring = major_radius + minor_radius * np.cos(phi)
-    x = np.column_stack(
-        [ring * np.cos(theta), ring * np.sin(theta), minor_radius * np.sin(phi)]
-    )
+    x = np.column_stack([ring * np.cos(theta), ring * np.sin(theta), minor_radius * np.sin(phi)])
     latent = {"theta": theta[:, None], "phi": phi[:, None]}
     return x, latent, 3
 

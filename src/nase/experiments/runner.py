@@ -304,9 +304,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         "bandwidth_stability_scores": {
             str(k): v for k, v in bundle.stability_result.per_k_stability.items()
         },
-        "oracle_subspace_distance_by_k": {
-            str(k): v for k, v in bundle.oracle_distances.items()
-        },
+        "oracle_subspace_distance_by_k": {str(k): v for k, v in bundle.oracle_distances.items()},
         "metrics_by_cutoff": quality_by_cutoff,
         **quality,
     }
@@ -317,9 +315,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         "bandwidth_stability_k": int(bundle.stability_result.k_star),
         "oracle_k": int(bundle.k_oracle),
         "stability_threshold": float(config.cutoff.stability_threshold),
-        "oracle_subspace_distance_by_k": {
-            str(k): v for k, v in bundle.oracle_distances.items()
-        },
+        "oracle_subspace_distance_by_k": {str(k): v for k, v in bundle.oracle_distances.items()},
     }
 
     run_dir = make_run_dir(config.output_root, config.name)
@@ -331,7 +327,8 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
     write_json(run_dir / "cutoffs.json", cutoffs)
 
     stacked_embeddings = np.stack(
-        [bundle.noisy_embeddings_by_epsilon[f"{float(e):.12g}"] for e in bundle.epsilon_grid], axis=0
+        [bundle.noisy_embeddings_by_epsilon[f"{float(e):.12g}"] for e in bundle.epsilon_grid],
+        axis=0,
     )
     stability_scores = np.array(
         [

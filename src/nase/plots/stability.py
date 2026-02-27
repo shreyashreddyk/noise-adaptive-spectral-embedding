@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from collections.abc import Mapping
 from pathlib import Path
-from typing import Mapping
 
 import matplotlib
+
 matplotlib.use("Agg", force=True)
 import matplotlib.pyplot as plt
 import numpy as np

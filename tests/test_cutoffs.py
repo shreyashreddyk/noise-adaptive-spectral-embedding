@@ -19,6 +19,12 @@ def test_eigengap_guardrail_never_returns_zero() -> None:
     assert k >= 1
 
 
+def test_eigengap_respects_bounded_search_window() -> None:
+    evals = np.array([1.0, 0.98, 0.96, 0.95, 0.60, 0.59, 0.58])
+    k = select_k_eigengap(evals, min_k=1, max_k=2)
+    assert k == 1
+
+
 def test_bandwidth_stability_scores_are_bounded_and_select_valid_k() -> None:
     theta = np.linspace(0.0, 2.0 * np.pi, 96, endpoint=False)
     points = np.column_stack([np.cos(theta), np.sin(theta)])
@@ -43,6 +49,29 @@ def test_bandwidth_stability_scores_are_bounded_and_select_valid_k() -> None:
     assert np.all(result.epsilon_pair_matrix <= 1.0)
     assert np.all(result.pairwise_bandwidth_scores >= 0.0)
     assert np.all(result.pairwise_bandwidth_scores <= 1.0)
+
+
+def test_bandwidth_stability_output_shapes_match_requested_grid_and_k() -> None:
+    theta = np.linspace(0.0, 2.0 * np.pi, 64, endpoint=False)
+    points = np.column_stack([np.cos(theta), np.sin(theta)])
+    distances = pairwise_squared_distance_matrix(points, use_cache=False)
+    bandwidths = [0.08, 0.12, 0.2, 0.35]
+    max_k = 6
+
+    result = select_k_bandwidth_stability(
+        distance_matrix=distances,
+        bandwidths=bandwidths,
+        min_k=1,
+        max_k=max_k,
+        threshold=0.75,
+    )
+
+    assert result.bandwidths is not None
+    assert result.bandwidths.shape == (len(bandwidths),)
+    assert result.epsilon_pair_matrix.shape == (len(bandwidths), len(bandwidths))
+    assert result.adjacent_vector_stability is not None
+    assert result.adjacent_vector_stability.shape == (len(bandwidths) - 1, max_k)
+    assert result.pairwise_bandwidth_scores.shape == (max_k,)
 
 
 def test_noiseless_circle_low_modes_are_more_stable_than_high_modes() -> None:

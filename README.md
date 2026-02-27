@@ -1,102 +1,107 @@
 # NASE: Noise-Adaptive Spectral Embedding
 
-NASE is a reproducible toolkit and experiment suite for spectral manifold learning under additive noise.  
-Its central goal is to choose a practical spectral truncation cutoff `k*` for diffusion maps and graph-based operators.
+NASE is a reproducible toolkit for studying spectral manifold learning under additive noise.
+The main engineering goal is to select a practical truncation cutoff `k*` for diffusion-map style
+embeddings in a way that is robust when high-frequency modes are unstable.
 
-The primary method is **bandwidth-stability truncation**: eigenvectors that remain stable across kernel bandwidths are treated as signal, while unstable high-frequency modes are treated as noise.
+## Project Overview and Goals
 
-## Project Overview
+- Implement a clean, testable pipeline from synthetic data to spectral embeddings and diagnostics.
+- Compare two cutoff strategies: `bandwidth_stability` (primary) and `eigengap` (baseline).
+- Quantify behavior across controlled noise settings where the true noise level is known.
+- Produce repeatable artefacts (`metrics.json`, `cutoffs.json`, `arrays.npz`, and figures) for analysis.
 
-- Core comparison: `bandwidth_stability` vs `eigengap` baseline.
-- Initial focus: synthetic manifolds with known additive noise amplitude `r`.
-- Explicitly avoids relying on fragile nearest-neighbour heuristics for `r` in the core pipeline.
-- Optional later-phase hooks are included for intrinsic-dimension and DSS-inspired ideas, but are not used as default decision drivers.
-
-## Installation
+## Clone and Run From Scratch
 
 ```bash
+git clone <your-fork-or-repo-url>
+cd noise-adaptive-spectral-embedding
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e .[dev]
+```
+
+Optional tooling:
+
+```bash
 pre-commit install
 ```
 
-## Quick Start
+## Common Commands
 
-Run a stability experiment:
+Using `Makefile`:
+
+```bash
+make lint
+make test
+make run-small
+```
+
+Equivalent direct commands:
+
+```bash
+ruff check .
+ruff format --check .
+pytest -q
+python -m nase run --config configs/smoke_small.yaml
+```
+
+## Reproducing Core Figures
+
+1) Run the core single-run experiment:
 
 ```bash
 python -m nase run --config configs/swiss_roll_stability.yaml
 ```
 
-Run a circle/sphere noise sweep (varying known noise level `r`):
+2) Regenerate figures from a chosen run directory (if needed):
+
+```bash
+python -m nase plot --run-dir results/<timestamp>_swiss_roll_stability
+```
+
+3) Reproduce method-comparison sweeps:
 
 ```bash
 python -m nase sweep --config configs/noise_sweep_circle_sphere.yaml
-```
-
-Run an eigengap-ambiguous suite comparing eigengap vs stability:
-
-```bash
 python -m nase sweep --config configs/eigengap_ambiguous_suite.yaml
 ```
 
-Regenerate figures for an existing run:
+## Bandwidth-Stability Truncation vs Eigengap
 
-```bash
-python -m nase plot --run-dir results/<timestamp>_<run_name>
-```
+- `eigengap`: picks `k` where `lambda_k - lambda_{k+1}` is largest within configured bounds.
+- `bandwidth_stability`: computes eigenvectors across an epsilon grid and scores per-mode agreement;
+  modes that remain stable across bandwidth changes are treated as signal.
+- Why include both: eigengap is simple and classical, but can be ambiguous in noisy settings with
+  small or irregular gaps. Stability provides an orthogonal robustness signal tied to perturbation behavior.
+- The chosen method is configured via `cutoff.method` in each experiment config.
 
 ## Output Artefacts
 
-Each run writes a timestamped folder under `results/` with:
+Each run directory under `results/` contains:
 
 - `config.yaml`
 - `metrics.json`
 - `cutoffs.json`
-- `arrays.npz` (compressed NumPy arrays)
-- `figures/*.png`
-- `figures/*.svg`
+- `arrays.npz`
+- `figures/*.png` and/or `figures/*.svg`
 
-Sweep runs additionally write:
+Sweep runs also include aggregate records and manifests.
 
-- `records.csv`
-- `records.json`
-- `aggregate.json`
-- `manifest.json`
-- `selected_k_comparison.png`
+## Attribution and Citations
 
-## Experiments
+This project draws on established ideas from diffusion operators and spectral manifold learning.
+Use and cite foundational work when building on these results:
 
-- Synthetic manifolds currently include circle, Swiss roll, and S-curve.
-- Additive Gaussian noise is injected with known standard deviation `r`.
-- Bandwidth stability is computed across an epsilon grid.
-- Eigengap is reported as baseline for direct comparison.
-- Sweep suites are provided for noise-level, bandwidth-grid, and ambiguous-gap comparisons.
+- Coifman, R. R., & Lafon, S. (2006). *Diffusion maps*. Applied and Computational Harmonic Analysis.
+- von Luxburg, U. (2007). *A tutorial on spectral clustering*. Statistics and Computing.
+- Berry, T., et al. (noise-robust manifold learning and diffusion-operator literature).
 
-## Experiment Matrix
+Project-specific attribution notes are maintained in `docs/references/CITATIONS.md`.
 
-| Config | Purpose | Expected insight |
-|---|---|---|
-| `configs/swiss_roll_stability.yaml` | Single-run bandwidth stability | Baseline `k*` from stable modes |
-| `configs/noise_sweep_circle_sphere.yaml` | Multi-seed noise sweep over `r` on circle/sphere | `k*` sensitivity to known additive noise |
-| `configs/eigengap_ambiguous_suite.yaml` | Eigengap-ambiguous method comparison suite | Why stability helps when eigengaps are ambiguous |
+## No Plagiarism Policy
 
-## Reproducibility and Quality
-
-- Deterministic seeding is built into the runner.
-- Ruff enforces formatting and lint checks.
-- Pytest includes unit tests and a smoke test for the full runner.
-- GitHub Actions runs lint, type checks, and tests on push and pull requests.
-
-## No Plagiarism / Attribution Policy
-
-This repository must use original wording in code comments and documentation.  
-Do not paste text from papers, websites, or other repositories.  
-If an external idea influences implementation, cite the source and restate it in your own words.
-
-## Citations
-
-Please cite foundational work when using this repository:
-
-- Coifman, R. R., & Lafon, S. (2006). Diffusion maps.
-- Berry, T., et al. (noise-robust manifold learning references).
-- Additional references and attribution notes are tracked in `docs/references/CITATIONS.md`.
+- All code comments, docs, and reports in this repository must be written in original wording.
+- Do not paste text from papers, websites, or other repositories.
+- When an external idea is used, cite the source and explain the adaptation in your own words.

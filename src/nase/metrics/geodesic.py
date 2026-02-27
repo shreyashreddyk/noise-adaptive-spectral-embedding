@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import numpy as np
 
-from nase.metrics.embedding_quality import geodesic_consistency_score as _geodesic_consistency_score_impl
+from nase.metrics.embedding_quality import (
+    geodesic_consistency_score as _geodesic_consistency_score_impl,
+)
 
 
 def geodesic_consistency_score(

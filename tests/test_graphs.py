@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import numpy as np
+from scipy.sparse import csr_matrix
 
 from nase.graphs.distances import choose_distance_backend
 from nase.graphs.kernels import gaussian_kernel
@@ -43,4 +44,39 @@ def test_markov_matrix_rows_sum_to_one() -> None:
     affinity = gaussian_kernel(distances, epsilon=0.7, symmetric=True)
     p = markov_matrix(affinity, alpha=0.5)
     row_sums = p.sum(axis=1)
+    assert np.allclose(row_sums, 1.0, atol=1e-10)
+
+
+def test_gaussian_kernel_local_scaling_dense_builds_valid_affinity() -> None:
+    x = np.array([[0.0], [0.3], [1.2], [2.1], [3.3]])
+    distances = choose_distance_backend(x, use_knn=False, knn_k=2, sparse_threshold_n=100)
+    affinity = gaussian_kernel(
+        distances,
+        epsilon=0.8,
+        local_scaling=True,
+        local_k=2,
+        symmetric=True,
+        zero_diagonal=True,
+    )
+    assert affinity.shape == (5, 5)
+    assert np.all(np.isfinite(affinity))
+    assert np.allclose(affinity, affinity.T, atol=1e-12)
+    assert np.allclose(np.diag(affinity), 0.0, atol=1e-12)
+    assert float(np.min(affinity)) >= 0.0
+
+
+def test_markov_matrix_sparse_rows_sum_to_one() -> None:
+    dense_affinity = np.array(
+        [
+            [0.0, 1.0, 2.0, 0.0],
+            [1.0, 0.0, 1.0, 1.0],
+            [2.0, 1.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 0.0],
+        ],
+        dtype=float,
+    )
+    sparse_affinity = csr_matrix(dense_affinity)
+    p = markov_matrix(sparse_affinity, alpha=0.5)
+    assert isinstance(p, csr_matrix)
+    row_sums = np.asarray(p.sum(axis=1)).ravel()
     assert np.allclose(row_sums, 1.0, atol=1e-10)

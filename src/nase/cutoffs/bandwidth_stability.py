@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
 
 import numpy as np
 from scipy.sparse import csr_matrix
@@ -11,6 +11,7 @@ from nase.graphs.kernels import gaussian_kernel
 from nase.spectral.embedding import diffusion_map_embedding, diffusion_operator
 
 DistanceBuilder = Callable[[np.ndarray], np.ndarray | csr_matrix]
+
 
 @dataclass(slots=True)
 class StabilityResult:
@@ -64,7 +65,9 @@ def compute_eigenvectors_across_bandwidths(
         operator = diffusion_operator(affinity=affinity, alpha=alpha)
         if not isinstance(operator, np.ndarray):
             operator = operator.toarray()
-        _, _, evecs = diffusion_map_embedding(operator=np.asarray(operator, dtype=float), k=k_max, t=1.0)
+        _, _, evecs = diffusion_map_embedding(
+            operator=np.asarray(operator, dtype=float), k=k_max, t=1.0
+        )
         evecs_by_bandwidth.append(evecs)
     return evecs_by_bandwidth
 
@@ -91,9 +94,7 @@ def compute_adjacent_vector_stability(
     return scores
 
 
-def compute_per_k_stability(
-    adjacent_vector_scores: np.ndarray, max_k: int
-) -> dict[int, float]:
+def compute_per_k_stability(adjacent_vector_scores: np.ndarray, max_k: int) -> dict[int, float]:
     if adjacent_vector_scores.size == 0:
         return {k: 1.0 for k in range(1, max_k + 1)}
     scores: dict[int, float] = {}
@@ -162,7 +163,9 @@ def select_k_bandwidth_stability(
     adjacent_vector_scores = compute_adjacent_vector_stability(
         eigenvectors_by_epsilon=eigenvectors_by_epsilon, max_k=safe_max_k
     )
-    score_map = compute_per_k_stability(adjacent_vector_scores=adjacent_vector_scores, max_k=safe_max_k)
+    score_map = compute_per_k_stability(
+        adjacent_vector_scores=adjacent_vector_scores, max_k=safe_max_k
+    )
     bounded_min_k = max(1, min(min_k, safe_max_k))
     passing = [
         k for k in range(bounded_min_k, safe_max_k + 1) if score_map.get(k, 0.0) >= threshold
@@ -173,7 +176,9 @@ def select_k_bandwidth_stability(
         eigenvectors_by_epsilon=eigenvectors_by_epsilon, max_k=safe_max_k
     )
     subspace_scores = (
-        adjacent_subspace_stability_stub(eigenvectors_by_epsilon=eigenvectors_by_epsilon, max_k=safe_max_k)
+        adjacent_subspace_stability_stub(
+            eigenvectors_by_epsilon=eigenvectors_by_epsilon, max_k=safe_max_k
+        )
         if enable_subspace_stability
         else None
     )

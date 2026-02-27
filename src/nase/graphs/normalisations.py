@@ -72,7 +72,10 @@ def markov_matrix_with_optional_dss(
     """
     working = affinity
     if enable_dss:
-        dense = working.toarray() if isinstance(working, csr_matrix) else np.asarray(working, dtype=float)
+        if isinstance(working, csr_matrix):
+            dense = working.toarray()
+        else:
+            dense = np.asarray(working, dtype=float)
         working = maybe_doubly_stochastic_scale(
             dense,
             enabled=True,
@@ -101,8 +104,8 @@ def laplacian_eigenmaps_matrices(
             positive = degree > 0.0
             inv_sqrt[positive] = 1.0 / np.sqrt(degree[positive])
             d_inv_sqrt = diags(inv_sqrt)
-            l = eye(affinity.shape[0], format="csr") - d_inv_sqrt @ affinity @ d_inv_sqrt
-            return l.tocsr(), d.tocsr()
+            laplacian = eye(affinity.shape[0], format="csr") - d_inv_sqrt @ affinity @ d_inv_sqrt
+            return laplacian.tocsr(), d.tocsr()
         return (d - affinity).tocsr(), d.tocsr()
 
     w = np.asarray(affinity, dtype=float)
@@ -113,6 +116,6 @@ def laplacian_eigenmaps_matrices(
         positive = degree > 0.0
         inv_sqrt[positive] = 1.0 / np.sqrt(degree[positive])
         d_inv_sqrt = np.diag(inv_sqrt)
-        l = np.eye(w.shape[0], dtype=float) - d_inv_sqrt @ w @ d_inv_sqrt
-        return l, d
+        laplacian = np.eye(w.shape[0], dtype=float) - d_inv_sqrt @ w @ d_inv_sqrt
+        return laplacian, d
     return d - w, d
