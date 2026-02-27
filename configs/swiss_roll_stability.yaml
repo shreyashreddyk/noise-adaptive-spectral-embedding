@@ -1,0 +1,28 @@
+name: swiss_roll_stability
+output_root: results
+data:
+  manifold: swiss_roll
+  n_samples: 400
+  ambient_dim: 3
+  noise_std: 0.08
+  seed: 123
+graph:
+  epsilon: 1.0
+  epsilon_grid: [0.5, 1.0, 2.0, 3.0]
+  use_knn: false
+  knn_k: 20
+  sparse_threshold_n: 1000
+spectral:
+  n_eigs: 20
+  diffusion_time: 1
+  alpha: 0.5
+cutoff:
+  method: bandwidth_stability
+  eigengap_min_k: 1
+  eigengap_max_k: 12
+  stability_min_k: 1
+  stability_max_k: 12
+  stability_threshold: 0.9
+plot:
+  dpi: 160
+  formats: [png, svg]

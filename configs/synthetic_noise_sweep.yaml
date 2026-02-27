@@ -1,0 +1,17 @@
+name: synthetic_noise_sweep
+output_root: results
+base_config: swiss_roll_stability.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: low_noise
+    overrides:
+      data:
+        noise_std: 0.03
+  - name: medium_noise
+    overrides:
+      data:
+        noise_std: 0.08
+  - name: high_noise
+    overrides:
+      data:
+        noise_std: 0.16

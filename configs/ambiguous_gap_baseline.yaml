@@ -1,0 +1,28 @@
+name: ambiguous_gap_baseline
+output_root: results
+data:
+  manifold: s_curve
+  n_samples: 500
+  ambient_dim: 3
+  noise_std: 0.12
+  seed: 321
+graph:
+  epsilon: 1.2
+  epsilon_grid: [0.8, 1.2, 1.6, 2.4]
+  use_knn: false
+  knn_k: 20
+  sparse_threshold_n: 1200
+spectral:
+  n_eigs: 25
+  diffusion_time: 1
+  alpha: 0.5
+cutoff:
+  method: eigengap
+  eigengap_min_k: 1
+  eigengap_max_k: 15
+  stability_min_k: 1
+  stability_max_k: 15
+  stability_threshold: 0.9
+plot:
+  dpi: 160
+  formats: [png, svg]
