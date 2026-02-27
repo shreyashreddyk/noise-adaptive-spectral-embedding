@@ -27,7 +27,7 @@ from nase.plots.embeddings import plot_embedding_2d
 from nase.plots.spectrum import plot_spectrum
 from nase.plots.stability import plot_stability_scores
 from nase.plots.stability_heatmap import plot_stability_heatmap
-from nase.spectral.diffusion_maps import diffusion_map_embedding, diffusion_operator
+from nase.spectral.embedding import diffusion_map_embedding, diffusion_operator
 from nase.utils import set_global_seed
 
 
@@ -86,7 +86,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
     for epsilon in config.graph.epsilon_grid:
         operator = _compute_operator(points=noisy_points, epsilon=epsilon, config=config)
         embedding, evals, evecs = diffusion_map_embedding(
-            operator=operator, n_eigs=config.spectral.n_eigs, time=config.spectral.diffusion_time
+            operator=operator, k=config.spectral.n_eigs - 1, t=config.spectral.diffusion_time
         )
         per_eps_evecs.append(evecs)
         if np.isclose(epsilon, config.graph.epsilon):
@@ -98,7 +98,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
             points=noisy_points, epsilon=config.graph.epsilon, config=config
         )
         base_embedding, base_evals, _ = diffusion_map_embedding(
-            operator=operator, n_eigs=config.spectral.n_eigs, time=config.spectral.diffusion_time
+            operator=operator, k=config.spectral.n_eigs - 1, t=config.spectral.diffusion_time
         )
 
     k_eigengap = select_k_eigengap(
