@@ -19,3 +19,4 @@ def test_geodesic_consistency_is_finite() -> None:
     coords = np.random.default_rng(2).normal(size=(20, 2))
     score = geodesic_consistency_score(reference_coords=coords, embedding=coords)
     assert np.isfinite(score)
+    assert -1.0 <= score <= 1.0
