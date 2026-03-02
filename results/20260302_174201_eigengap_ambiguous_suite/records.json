@@ -1,0 +1,70 @@
+{
+  "records": [
+    {
+      "case": "eigengap_ambiguous",
+      "continuity": 0.3268888888888889,
+      "geodesic_consistency": 0.5817306392237179,
+      "k_bandwidth_stability": 14,
+      "k_eigengap": 3,
+      "run_dir": "results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174201_eigengap_ambiguous_suite_eigengap_ambiguous_seed7",
+      "seed": 7,
+      "selected_k": 3,
+      "trustworthiness": 0.855299322337297
+    },
+    {
+      "case": "eigengap_ambiguous",
+      "continuity": 0.32222222222222224,
+      "geodesic_consistency": 0.6986960741681968,
+      "k_bandwidth_stability": 14,
+      "k_eigengap": 3,
+      "run_dir": "results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174205_eigengap_ambiguous_suite_eigengap_ambiguous_seed8",
+      "seed": 8,
+      "selected_k": 3,
+      "trustworthiness": 0.8489610024293568
+    },
+    {
+      "case": "eigengap_ambiguous",
+      "continuity": 0.31733333333333336,
+      "geodesic_consistency": 0.5637391134303634,
+      "k_bandwidth_stability": 12,
+      "k_eigengap": 3,
+      "run_dir": "results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174208_eigengap_ambiguous_suite_eigengap_ambiguous_seed9",
+      "seed": 9,
+      "selected_k": 3,
+      "trustworthiness": 0.8560393811533051
+    },
+    {
+      "case": "stability_ambiguous",
+      "continuity": 0.3268888888888889,
+      "geodesic_consistency": 0.5817306392237179,
+      "k_bandwidth_stability": 8,
+      "k_eigengap": 3,
+      "run_dir": "results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174211_eigengap_ambiguous_suite_stability_ambiguous_seed7",
+      "seed": 7,
+      "selected_k": 8,
+      "trustworthiness": 0.855299322337297
+    },
+    {
+      "case": "stability_ambiguous",
+      "continuity": 0.32222222222222224,
+      "geodesic_consistency": 0.6986960741681968,
+      "k_bandwidth_stability": 9,
+      "k_eigengap": 3,
+      "run_dir": "results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174214_eigengap_ambiguous_suite_stability_ambiguous_seed8",
+      "seed": 8,
+      "selected_k": 9,
+      "trustworthiness": 0.8489610024293568
+    },
+    {
+      "case": "stability_ambiguous",
+      "continuity": 0.31733333333333336,
+      "geodesic_consistency": 0.5637391134303634,
+      "k_bandwidth_stability": 8,
+      "k_eigengap": 3,
+      "run_dir": "results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174218_eigengap_ambiguous_suite_stability_ambiguous_seed9",
+      "seed": 9,
+      "selected_k": 8,
+      "trustworthiness": 0.8560393811533051
+    }
+  ]
+}

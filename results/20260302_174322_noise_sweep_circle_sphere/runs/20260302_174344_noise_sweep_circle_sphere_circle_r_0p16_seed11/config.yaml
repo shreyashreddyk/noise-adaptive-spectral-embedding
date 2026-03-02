@@ -1,0 +1,40 @@
+cutoff:
+  eigengap_max_k: 12
+  eigengap_min_k: 1
+  method: bandwidth_stability
+  stability_max_k: 12
+  stability_min_k: 1
+  stability_threshold: 0.9
+data:
+  ambient_dim: 3
+  intrinsic_dim: 2
+  manifold: circle
+  n_samples: 450
+  noise_std: 0.16
+  seed: 11
+graph:
+  dss_max_iter: 500
+  dss_min_value: 1.0e-12
+  dss_tol: 1.0e-06
+  enable_dss: false
+  epsilon: 1.0
+  epsilon_grid:
+  - 0.5
+  - 0.8
+  - 1.0
+  - 1.4
+  - 2.0
+  knn_k: 20
+  sparse_threshold_n: 1200
+  use_knn: false
+name: noise_sweep_circle_sphere_circle_r_0p16_seed11
+output_root: results/20260302_174322_noise_sweep_circle_sphere/runs
+plot:
+  dpi: 160
+  formats:
+  - png
+  - svg
+spectral:
+  alpha: 0.5
+  diffusion_time: 1
+  n_eigs: 20

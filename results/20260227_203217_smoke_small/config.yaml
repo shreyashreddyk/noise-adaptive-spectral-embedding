@@ -1,0 +1,33 @@
+cutoff:
+  eigengap_max_k: 6
+  eigengap_min_k: 1
+  method: bandwidth_stability
+  stability_max_k: 6
+  stability_min_k: 1
+  stability_threshold: 0.9
+data:
+  ambient_dim: 3
+  intrinsic_dim: 2
+  manifold: circle
+  n_samples: 120
+  noise_std: 0.05
+  seed: 42
+graph:
+  epsilon: 1.0
+  epsilon_grid:
+  - 0.7
+  - 1.0
+  - 1.4
+  knn_k: 20
+  sparse_threshold_n: 1000
+  use_knn: false
+name: smoke_small
+output_root: results
+plot:
+  dpi: 120
+  formats:
+  - png
+spectral:
+  alpha: 0.5
+  diffusion_time: 1
+  n_eigs: 10

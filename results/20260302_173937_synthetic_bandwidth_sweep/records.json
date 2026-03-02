@@ -1,0 +1,48 @@
+{
+  "records": [
+    {
+      "case": "narrow_bandwidths",
+      "continuity": 0.6642500000000001,
+      "geodesic_consistency": -0.013834157361599797,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 9,
+      "run_dir": "results/20260302_173937_synthetic_bandwidth_sweep/runs/20260302_173938_synthetic_bandwidth_sweep_narrow_bandwidths_seed101",
+      "seed": 101,
+      "selected_k": 1,
+      "trustworthiness": 0.9897503250975292
+    },
+    {
+      "case": "narrow_bandwidths",
+      "continuity": 0.6435,
+      "geodesic_consistency": -0.02089107289403817,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 11,
+      "run_dir": "results/20260302_173937_synthetic_bandwidth_sweep/runs/20260302_173941_synthetic_bandwidth_sweep_narrow_bandwidths_seed202",
+      "seed": 202,
+      "selected_k": 1,
+      "trustworthiness": 0.9782067620286086
+    },
+    {
+      "case": "wide_bandwidths",
+      "continuity": 0.37324999999999997,
+      "geodesic_consistency": -0.00940923973775837,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 9,
+      "run_dir": "results/20260302_173937_synthetic_bandwidth_sweep/runs/20260302_173944_synthetic_bandwidth_sweep_wide_bandwidths_seed101",
+      "seed": 101,
+      "selected_k": 1,
+      "trustworthiness": 0.7818407022106633
+    },
+    {
+      "case": "wide_bandwidths",
+      "continuity": 0.64225,
+      "geodesic_consistency": -0.02136285406250903,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 10,
+      "run_dir": "results/20260302_173937_synthetic_bandwidth_sweep/runs/20260302_173947_synthetic_bandwidth_sweep_wide_bandwidths_seed202",
+      "seed": 202,
+      "selected_k": 1,
+      "trustworthiness": 0.9692574772431729
+    }
+  ]
+}

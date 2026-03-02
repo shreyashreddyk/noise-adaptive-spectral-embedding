@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "case": "eigengap_ambiguous",
+      "continuity_mean": 0.32214814814814813,
+      "geodesic_consistency_mean": 0.6147219422740927,
+      "selected_k_mean": 3.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.853433235306653
+    },
+    {
+      "case": "stability_ambiguous",
+      "continuity_mean": 0.32214814814814813,
+      "geodesic_consistency_mean": 0.6147219422740927,
+      "selected_k_mean": 8.333333333333334,
+      "selected_k_std": 0.5773502691896258,
+      "trustworthiness_mean": 0.853433235306653
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/ambiguous_gap_baseline.yaml",
+  "cases": [
+    {
+      "name": "eigengap_mode",
+      "overrides": {
+        "cutoff": {
+          "method": "eigengap"
+        },
+        "data": {
+          "noise_std": 0.12
+        }
+      }
+    },
+    {
+      "name": "stability_mode",
+      "overrides": {
+        "cutoff": {
+          "method": "bandwidth_stability"
+        },
+        "data": {
+          "noise_std": 0.12
+        }
+      }
+    }
+  ],
+  "name": "ambiguous_gap_suite",
+  "seeds": [
+    7,
+    8,
+    9
+  ]
+}

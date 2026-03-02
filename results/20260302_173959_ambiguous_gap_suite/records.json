@@ -1,0 +1,70 @@
+{
+  "records": [
+    {
+      "case": "eigengap_mode",
+      "continuity": 0.17860000000000004,
+      "geodesic_consistency": 0.0009798925659578199,
+      "k_bandwidth_stability": 13,
+      "k_eigengap": 1,
+      "run_dir": "results/20260302_173959_ambiguous_gap_suite/runs/20260302_174000_ambiguous_gap_suite_eigengap_mode_seed7",
+      "seed": 7,
+      "selected_k": 1,
+      "trustworthiness": 0.8783830753353973
+    },
+    {
+      "case": "eigengap_mode",
+      "continuity": 0.1864,
+      "geodesic_consistency": -0.0031762878134043884,
+      "k_bandwidth_stability": 13,
+      "k_eigengap": 1,
+      "run_dir": "results/20260302_173959_ambiguous_gap_suite/runs/20260302_174003_ambiguous_gap_suite_eigengap_mode_seed8",
+      "seed": 8,
+      "selected_k": 1,
+      "trustworthiness": 0.8858526315789473
+    },
+    {
+      "case": "eigengap_mode",
+      "continuity": 0.1708,
+      "geodesic_consistency": -0.008124295336215016,
+      "k_bandwidth_stability": 13,
+      "k_eigengap": 1,
+      "run_dir": "results/20260302_173959_ambiguous_gap_suite/runs/20260302_174007_ambiguous_gap_suite_eigengap_mode_seed9",
+      "seed": 9,
+      "selected_k": 1,
+      "trustworthiness": 0.8740821465428277
+    },
+    {
+      "case": "stability_mode",
+      "continuity": 0.2506,
+      "geodesic_consistency": -0.010313714851691962,
+      "k_bandwidth_stability": 13,
+      "k_eigengap": 1,
+      "run_dir": "results/20260302_173959_ambiguous_gap_suite/runs/20260302_174010_ambiguous_gap_suite_stability_mode_seed7",
+      "seed": 7,
+      "selected_k": 13,
+      "trustworthiness": 0.9078468524251806
+    },
+    {
+      "case": "stability_mode",
+      "continuity": 0.2494,
+      "geodesic_consistency": 0.0016265007240211886,
+      "k_bandwidth_stability": 13,
+      "k_eigengap": 1,
+      "run_dir": "results/20260302_173959_ambiguous_gap_suite/runs/20260302_174013_ambiguous_gap_suite_stability_mode_seed8",
+      "seed": 8,
+      "selected_k": 13,
+      "trustworthiness": 0.9126782249742003
+    },
+    {
+      "case": "stability_mode",
+      "continuity": 0.275,
+      "geodesic_consistency": -0.0026424839000863697,
+      "k_bandwidth_stability": 13,
+      "k_eigengap": 1,
+      "run_dir": "results/20260302_173959_ambiguous_gap_suite/runs/20260302_174017_ambiguous_gap_suite_stability_mode_seed9",
+      "seed": 9,
+      "selected_k": 13,
+      "trustworthiness": 0.9220899896800826
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+{
+  "bandwidth_stability_scores": {
+    "1": 0.9997800701486748,
+    "2": 0.9994679898668164,
+    "3": 0.9984348727162895,
+    "4": 0.9986922105124085,
+    "5": 0.9996335743278766,
+    "6": 0.9996254003647704
+  },
+  "continuity": 0.9000000000000002,
+  "geodesic_consistency": 0.8268855610788363,
+  "k_bandwidth_stability": 6,
+  "k_eigengap": 2,
+  "k_oracle": 1,
+  "known_noise_r": 0.05,
+  "metadata": {
+    "epsilon": 1.0,
+    "epsilon_grid": [
+      0.7,
+      1.0,
+      1.4
+    ],
+    "manifold": "circle",
+    "method": "bandwidth_stability",
+    "n_samples": 120,
+    "seed": 42
+  },
+  "metrics_by_cutoff": {
+    "bandwidth_stability": {
+      "continuity": 0.9000000000000002,
+      "geodesic_consistency": 0.8268855610788363,
+      "trustworthiness": 0.9990909090909091
+    },
+    "eigengap": {
+      "continuity": 0.9000000000000002,
+      "geodesic_consistency": 0.8268855610788363,
+      "trustworthiness": 0.9990909090909091
+    },
+    "oracle": {
+      "continuity": 0.45583333333333337,
+      "geodesic_consistency": 0.7635386455226512,
+      "trustworthiness": 0.7920733652312599
+    }
+  },
+  "oracle_subspace_distance_by_k": {
+    "1": 0.05335169599955185,
+    "2": 0.07788212024979695,
+    "3": 0.1586175949899504,
+    "4": 0.1805033047492774,
+    "5": 0.24865024305880776,
+    "6": 0.3060908863331267
+  },
+  "selected_k": 6,
+  "trustworthiness": 0.9990909090909091
+}

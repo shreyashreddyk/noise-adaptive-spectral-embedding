@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "case": "high_noise",
+      "continuity_mean": 0.13208333333333333,
+      "geodesic_consistency_mean": -1.965674650981203,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.6530117035110533
+    },
+    {
+      "case": "low_noise",
+      "continuity_mean": 0.12250000000000001,
+      "geodesic_consistency_mean": -1.962735705090059,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.6436263545730386
+    },
+    {
+      "case": "medium_noise",
+      "continuity_mean": 0.14025,
+      "geodesic_consistency_mean": -1.966012571628254,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.6652624620719549
+    }
+  ]
+}

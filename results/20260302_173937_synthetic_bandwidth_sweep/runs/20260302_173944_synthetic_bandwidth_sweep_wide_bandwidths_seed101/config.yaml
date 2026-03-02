@@ -1,0 +1,39 @@
+cutoff:
+  eigengap_max_k: 12
+  eigengap_min_k: 1
+  method: bandwidth_stability
+  stability_max_k: 12
+  stability_min_k: 1
+  stability_threshold: 0.9
+data:
+  ambient_dim: 3
+  intrinsic_dim: 2
+  manifold: swiss_roll
+  n_samples: 400
+  noise_std: 0.08
+  seed: 101
+graph:
+  dss_max_iter: 500
+  dss_min_value: 1.0e-12
+  dss_tol: 1.0e-06
+  enable_dss: false
+  epsilon: 1.2
+  epsilon_grid:
+  - 0.6
+  - 1.2
+  - 2.4
+  - 3.0
+  knn_k: 20
+  sparse_threshold_n: 1000
+  use_knn: false
+name: synthetic_bandwidth_sweep_wide_bandwidths_seed101
+output_root: results/20260302_173937_synthetic_bandwidth_sweep/runs
+plot:
+  dpi: 160
+  formats:
+  - png
+  - svg
+spectral:
+  alpha: 0.5
+  diffusion_time: 1
+  n_eigs: 20

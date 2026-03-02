@@ -1,0 +1,16 @@
+{
+  "bandwidth_stability_k": 6,
+  "eigengap_k": 2,
+  "oracle_k": 1,
+  "oracle_subspace_distance_by_k": {
+    "1": 0.05335169599955185,
+    "2": 0.07788212024979695,
+    "3": 0.1586175949899504,
+    "4": 0.1805033047492774,
+    "5": 0.24865024305880776,
+    "6": 0.3060908863331267
+  },
+  "selected_k": 6,
+  "selected_method": "bandwidth_stability",
+  "stability_threshold": 0.9
+}

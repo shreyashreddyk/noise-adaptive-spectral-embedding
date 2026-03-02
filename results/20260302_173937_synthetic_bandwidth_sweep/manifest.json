@@ -1,0 +1,37 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/swiss_roll_stability.yaml",
+  "cases": [
+    {
+      "name": "narrow_bandwidths",
+      "overrides": {
+        "graph": {
+          "epsilon": 0.8,
+          "epsilon_grid": [
+            0.5,
+            0.8,
+            1.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "wide_bandwidths",
+      "overrides": {
+        "graph": {
+          "epsilon": 1.2,
+          "epsilon_grid": [
+            0.6,
+            1.2,
+            2.4,
+            3.0
+          ]
+        }
+      }
+    }
+  ],
+  "name": "synthetic_bandwidth_sweep",
+  "seeds": [
+    101,
+    202
+  ]
+}

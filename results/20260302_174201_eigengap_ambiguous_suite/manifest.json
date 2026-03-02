@@ -1,0 +1,67 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/synthetic_plan_base.yaml",
+  "cases": [
+    {
+      "name": "eigengap_ambiguous",
+      "overrides": {
+        "cutoff": {
+          "eigengap_max_k": 14,
+          "method": "eigengap",
+          "stability_max_k": 14
+        },
+        "data": {
+          "ambient_dim": 6,
+          "manifold": "sphere",
+          "noise_std": 0.14
+        },
+        "graph": {
+          "epsilon": 1.0,
+          "epsilon_grid": [
+            0.85,
+            1.0,
+            1.15
+          ]
+        },
+        "spectral": {
+          "n_eigs": 24
+        }
+      }
+    },
+    {
+      "name": "stability_ambiguous",
+      "overrides": {
+        "cutoff": {
+          "eigengap_max_k": 14,
+          "method": "bandwidth_stability",
+          "stability_max_k": 14,
+          "stability_threshold": 0.9
+        },
+        "data": {
+          "ambient_dim": 6,
+          "manifold": "sphere",
+          "noise_std": 0.14
+        },
+        "graph": {
+          "epsilon": 1.0,
+          "epsilon_grid": [
+            0.6,
+            0.8,
+            1.0,
+            1.3,
+            1.7,
+            2.2
+          ]
+        },
+        "spectral": {
+          "n_eigs": 24
+        }
+      }
+    }
+  ],
+  "name": "eigengap_ambiguous_suite",
+  "seeds": [
+    7,
+    8,
+    9
+  ]
+}

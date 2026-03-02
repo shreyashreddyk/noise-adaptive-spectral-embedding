@@ -1,0 +1,35 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/swiss_roll_stability.yaml",
+  "cases": [
+    {
+      "name": "low_noise",
+      "overrides": {
+        "data": {
+          "noise_std": 0.03
+        }
+      }
+    },
+    {
+      "name": "medium_noise",
+      "overrides": {
+        "data": {
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "high_noise",
+      "overrides": {
+        "data": {
+          "noise_std": 0.16
+        }
+      }
+    }
+  ],
+  "name": "synthetic_noise_sweep",
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

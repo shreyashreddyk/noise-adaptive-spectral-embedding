@@ -1,0 +1,7 @@
+case,seed,run_dir,selected_k,k_eigengap,k_bandwidth_stability,trustworthiness,continuity,geodesic_consistency
+eigengap_mode,7,results/20260302_173959_ambiguous_gap_suite/runs/20260302_174000_ambiguous_gap_suite_eigengap_mode_seed7,1,1,13,0.8783830753353973,0.17860000000000004,0.0009798925659578199
+eigengap_mode,8,results/20260302_173959_ambiguous_gap_suite/runs/20260302_174003_ambiguous_gap_suite_eigengap_mode_seed8,1,1,13,0.8858526315789473,0.1864,-0.0031762878134043884
+eigengap_mode,9,results/20260302_173959_ambiguous_gap_suite/runs/20260302_174007_ambiguous_gap_suite_eigengap_mode_seed9,1,1,13,0.8740821465428277,0.1708,-0.008124295336215016
+stability_mode,7,results/20260302_173959_ambiguous_gap_suite/runs/20260302_174010_ambiguous_gap_suite_stability_mode_seed7,13,1,13,0.9078468524251806,0.2506,-0.010313714851691962
+stability_mode,8,results/20260302_173959_ambiguous_gap_suite/runs/20260302_174013_ambiguous_gap_suite_stability_mode_seed8,13,1,13,0.9126782249742003,0.2494,0.0016265007240211886
+stability_mode,9,results/20260302_173959_ambiguous_gap_suite/runs/20260302_174017_ambiguous_gap_suite_stability_mode_seed9,13,1,13,0.9220899896800826,0.275,-0.0026424839000863697

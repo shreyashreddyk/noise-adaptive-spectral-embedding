@@ -1,0 +1,71 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/synthetic_plan_base.yaml",
+  "cases": [
+    {
+      "name": "circle_r_0p02",
+      "overrides": {
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.02
+        }
+      }
+    },
+    {
+      "name": "circle_r_0p08",
+      "overrides": {
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "circle_r_0p16",
+      "overrides": {
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.16
+        }
+      }
+    },
+    {
+      "name": "sphere_r_0p02",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.02
+        }
+      }
+    },
+    {
+      "name": "sphere_r_0p08",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "sphere_r_0p16",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.16
+        }
+      }
+    }
+  ],
+  "name": "noise_sweep_circle_sphere",
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}
