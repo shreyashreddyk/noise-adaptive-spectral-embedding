@@ -228,6 +228,14 @@ python -m pip install -e .[dev]
 
 Requires Python >= 3.10. Tested on macOS (darwin 24.6.0).
 
+Optional: install pre-commit hooks so ruff lint and format checks run automatically before each commit:
+
+```bash
+pre-commit install
+```
+
+This uses the config in `.pre-commit-config.yaml`, which runs two hooks from `ruff-pre-commit` (v0.9.9): `ruff-check` (linting) and `ruff-format` (formatting). If either hook fails, the commit is blocked until the issues are fixed. This is the same set of checks that `make lint` runs, but enforced automatically.
+
 ### Running experiments
 
 Single run:
@@ -358,8 +366,12 @@ noise-adaptive-spectral-embedding/
 ├── pyproject.toml                # package config, dependencies, ruff/pytest settings
 ├── Makefile                      # dev shortcuts
 ├── CONTRIBUTING.md               # contributor guide
+├── .pre-commit-config.yaml       # ruff lint + format hooks (run before each commit)
+├── .gitignore                    # excludes caches, venvs, build artifacts from VCS
 └── LICENSE                       # MIT
 ```
+
+**What is and isn't tracked by git.** The `.gitignore` excludes `.venv/`, `__pycache__/`, `.pytest_cache/`, `.ruff_cache/`, `build/`, `dist/`, and compiled bytecode (`*.pyc`, `*.pyo`, `*.pyd`, `*.egg-info/`). Notably, `results/` is **not** gitignored — experiment outputs are committed so that the repository is a self-contained record of all runs, metrics, and figures.
 
 ## Limitations and Future Work
 

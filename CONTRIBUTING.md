@@ -11,6 +11,13 @@ pre-commit install
 
 Requires Python >= 3.10.
 
+The `pre-commit install` step registers git hooks defined in `.pre-commit-config.yaml`. These currently run two hooks from `ruff-pre-commit` (v0.9.9):
+
+- **`ruff-check`** — runs the same lint rules configured in `pyproject.toml` (E, F, I, B, UP, N, W with E203 ignored, line length 100).
+- **`ruff-format`** — enforces the same formatting rules (double quotes, space indent).
+
+If either hook fails, the commit is rejected. You can bypass hooks temporarily with `git commit --no-verify`, but this is discouraged — the CI-equivalent checks are `make lint`.
+
 ## Running Checks
 
 ```bash
@@ -74,9 +81,21 @@ Each run directory contains:
 
 For sweeps, also check `aggregate.json` (case-level means/std) and `records.csv` (flat table of all runs).
 
+## What Git Tracks (and Doesn't)
+
+The `.gitignore` excludes:
+
+- `.venv/` — local virtual environment
+- `__pycache__/`, `*.pyc`, `*.pyo`, `*.pyd` — Python bytecode
+- `.pytest_cache/`, `.ruff_cache/`, `.mypy_cache/` — tool caches
+- `build/`, `dist/`, `*.egg-info/` — build artifacts
+
+Everything else is tracked, including `results/`. We commit experiment outputs (metrics, figures, arrays) so the repo is a self-contained record. If a sweep produces very large `arrays.npz` files, consider adding specific run directories to `.gitignore` and noting their absence in the README.
+
 ## Style Guide
 
 - Ruff config in `pyproject.toml`: line length 100, rules E/F/I/B/UP/N/W.
+- Pre-commit hooks enforce lint and format checks automatically before each commit (see Dev Setup above).
 - Use type annotations and dataclasses for structured data.
 - Thread `seed` values through all random operations for determinism.
 - Keep functions focused and unit-testable.
