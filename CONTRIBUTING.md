@@ -1,35 +1,97 @@
 # Contributing to NASE
 
-## Development Workflow
+## Dev Setup
 
-1. Create a feature branch.
-2. Install development dependencies:
-   ```bash
-   python -m pip install -e .[dev]
-   pre-commit install
-   ```
-3. Make focused, testable changes.
-4. Run checks locally:
-   ```bash
-   ruff check .
-   ruff format --check .
-   pytest -q
-   ```
-5. Open a pull request with:
-   - a concise motivation,
-   - implementation notes,
-   - validation evidence.
+```bash
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .[dev]
+pre-commit install
+```
 
-## Coding Guidelines
+Requires Python >= 3.10.
 
-- Use explicit typing and dataclasses for structured config/state.
-- Keep functions small and unit-testable.
-- Preserve deterministic behaviour by threading seed values through data generation and experiments.
-- Avoid unnecessary dense `O(n^2)` memory usage for large `n`; prefer kNN sparse paths when configured.
-- Keep docs in en-GB spelling.
+## Running Checks
 
-## Research and Attribution
+```bash
+make verify     # runs both lint and tests
+```
 
-- Write all documentation in original language.
-- Do not copy text from papers.
-- Include citations for ideas adapted from published work.
+Or separately:
+
+```bash
+ruff check .             # lint
+ruff format --check .    # format check
+pytest -q                # tests
+```
+
+Auto-fix formatting:
+
+```bash
+make format     # ruff check --fix + ruff format
+```
+
+## Adding a New Experiment Config
+
+1. Create a YAML file in `configs/`. Use `configs/smoke_small.yaml` as a minimal template or `configs/swiss_roll_stability.yaml` for a full single-run config.
+
+2. For a sweep config, define `base_config`, `seeds`, and `cases` with `overrides`:
+
+```yaml
+name: my_sweep
+output_root: results
+base_config: swiss_roll_stability.yaml
+seeds: [42, 43]
+cases:
+  - name: low_noise
+    overrides:
+      data:
+        noise_std: 0.03
+  - name: high_noise
+    overrides:
+      data:
+        noise_std: 0.20
+```
+
+3. Run it:
+
+```bash
+nase run --config configs/my_config.yaml       # single run
+nase sweep --config configs/my_sweep.yaml      # sweep
+```
+
+4. Check output in `results/<timestamp>_<name>/`.
+
+## Interpreting Run Outputs
+
+Each run directory contains:
+
+- **`config.yaml`** — the exact config that was used (with all defaults filled in).
+- **`metrics.json`** — key results: `selected_k`, `k_eigengap`, `k_bandwidth_stability`, `k_oracle`, quality metrics (`trustworthiness`, `continuity`, `geodesic_consistency`), and per-k stability scores.
+- **`cutoffs.json`** — cutoff comparison summary.
+- **`arrays.npz`** — numpy arrays for downstream analysis (clean/noisy points, embeddings, eigenvalues, eigenvectors, stability scores).
+- **`figures/`** — spectrum, eigengap, stability curve, heatmap, embedding scatter, and ablation comparison plots.
+
+For sweeps, also check `aggregate.json` (case-level means/std) and `records.csv` (flat table of all runs).
+
+## Style Guide
+
+- Ruff config in `pyproject.toml`: line length 100, rules E/F/I/B/UP/N/W.
+- Use type annotations and dataclasses for structured data.
+- Thread `seed` values through all random operations for determinism.
+- Keep functions focused and unit-testable.
+- Write docs in original language — do not copy from papers or external sources.
+- Cite referenced ideas in `docs/references/CITATIONS.md`.
+
+## Adding a New Manifold Generator
+
+1. Add a `_sample_<name>` function in `src/nase/data/synthetic.py` following the existing pattern (returns `(x, latent_params, native_dim)`).
+2. Register it in the `generate_synthetic` dispatch block.
+3. Add a test in `tests/test_synthetic.py`.
+
+## Adding a New Cutoff Method
+
+1. Create a module in `src/nase/cutoffs/` with a `select_k_<method>` function.
+2. Wire it into `_compute_bundle` in `src/nase/experiments/runner.py` alongside the existing eigengap and bandwidth-stability paths.
+3. Add the method name to the `config.cutoff.method` dispatch logic.
+4. Add tests in `tests/test_cutoffs.py`.
