@@ -1,0 +1,45 @@
+name: intrinsic_dim_circle_sphere
+output_root: results
+base_config: synthetic_plan_base.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: circle_low_noise
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.02
+      estimators:
+        enable_intrinsic_dim: true
+        intrinsic_dim_k: 10
+        intrinsic_dim_estimate_clean: true
+  - name: circle_high_noise
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.16
+      estimators:
+        enable_intrinsic_dim: true
+        intrinsic_dim_k: 10
+        intrinsic_dim_estimate_clean: true
+  - name: sphere_low_noise
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.02
+      estimators:
+        enable_intrinsic_dim: true
+        intrinsic_dim_k: 10
+        intrinsic_dim_estimate_clean: true
+  - name: sphere_high_noise
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.16
+      estimators:
+        enable_intrinsic_dim: true
+        intrinsic_dim_k: 10
+        intrinsic_dim_estimate_clean: true

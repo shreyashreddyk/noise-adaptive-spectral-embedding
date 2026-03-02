@@ -1,0 +1,71 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/synthetic_plan_base.yaml",
+  "cases": [
+    {
+      "name": "circle_low_noise",
+      "overrides": {
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.02
+        },
+        "estimators": {
+          "enable_intrinsic_dim": true,
+          "intrinsic_dim_estimate_clean": true,
+          "intrinsic_dim_k": 10
+        }
+      }
+    },
+    {
+      "name": "circle_high_noise",
+      "overrides": {
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.16
+        },
+        "estimators": {
+          "enable_intrinsic_dim": true,
+          "intrinsic_dim_estimate_clean": true,
+          "intrinsic_dim_k": 10
+        }
+      }
+    },
+    {
+      "name": "sphere_low_noise",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.02
+        },
+        "estimators": {
+          "enable_intrinsic_dim": true,
+          "intrinsic_dim_estimate_clean": true,
+          "intrinsic_dim_k": 10
+        }
+      }
+    },
+    {
+      "name": "sphere_high_noise",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.16
+        },
+        "estimators": {
+          "enable_intrinsic_dim": true,
+          "intrinsic_dim_estimate_clean": true,
+          "intrinsic_dim_k": 10
+        }
+      }
+    }
+  ],
+  "name": "intrinsic_dim_circle_sphere",
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

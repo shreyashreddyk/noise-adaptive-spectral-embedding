@@ -1,0 +1,21 @@
+name: intrinsic_dim_swiss_roll
+output_root: results
+base_config: swiss_roll_stability.yaml
+seeds: [11, 22]
+cases:
+  - name: swiss_roll_low_noise
+    overrides:
+      data:
+        noise_std: 0.03
+      estimators:
+        enable_intrinsic_dim: true
+        intrinsic_dim_k: 10
+        intrinsic_dim_estimate_clean: true
+  - name: swiss_roll_high_noise
+    overrides:
+      data:
+        noise_std: 0.16
+      estimators:
+        enable_intrinsic_dim: true
+        intrinsic_dim_k: 10
+        intrinsic_dim_estimate_clean: true

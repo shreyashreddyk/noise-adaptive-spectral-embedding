@@ -1,0 +1,25 @@
+{
+  "bandwidth_stability_k": 8,
+  "eigengap_k": 3,
+  "estimated_intrinsic_dim_clean": 2.246153893975276,
+  "estimated_intrinsic_dim_noisy": 4.637826764701255,
+  "k_intrinsic_dim": 5,
+  "oracle_k": 3,
+  "oracle_subspace_distance_by_k": {
+    "1": 0.4643588233820828,
+    "10": 1.399039760497212,
+    "11": 1.6890491595445487,
+    "12": 1.646382516060987,
+    "2": 0.5070244290129469,
+    "3": 0.4246490750419502,
+    "4": 0.6691312374986004,
+    "5": 0.8486363829201278,
+    "6": 0.9784138713763144,
+    "7": 1.1165082427404518,
+    "8": 1.0414610187177615,
+    "9": 1.2531368420226645
+  },
+  "selected_k": 8,
+  "selected_method": "bandwidth_stability",
+  "stability_threshold": 0.9
+}

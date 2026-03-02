@@ -72,19 +72,21 @@ def run_sweep(config_path: Path) -> SweepResult:
             config = config_from_dict(candidate)
             result = run_experiment(config)
             metrics = result.metrics
-            records.append(
-                {
-                    "case": case_name,
-                    "seed": seed,
-                    "run_dir": str(result.run_dir),
-                    "selected_k": metrics["selected_k"],
-                    "k_eigengap": metrics["k_eigengap"],
-                    "k_bandwidth_stability": metrics["k_bandwidth_stability"],
-                    "trustworthiness": metrics["trustworthiness"],
-                    "continuity": metrics["continuity"],
-                    "geodesic_consistency": metrics["geodesic_consistency"],
-                }
-            )
+            record: dict[str, Any] = {
+                "case": case_name,
+                "seed": seed,
+                "run_dir": str(result.run_dir),
+                "selected_k": metrics["selected_k"],
+                "k_eigengap": metrics["k_eigengap"],
+                "k_bandwidth_stability": metrics["k_bandwidth_stability"],
+                "trustworthiness": metrics["trustworthiness"],
+                "continuity": metrics["continuity"],
+                "geodesic_consistency": metrics["geodesic_consistency"],
+            }
+            if "estimated_intrinsic_dim_noisy" in metrics:
+                record["estimated_intrinsic_dim_noisy"] = metrics["estimated_intrinsic_dim_noisy"]
+                record["k_intrinsic_dim"] = metrics["k_intrinsic_dim"]
+            records.append(record)
 
     aggregate = _aggregate(records)
     frame = pd.DataFrame.from_records(records)

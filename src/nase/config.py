@@ -51,6 +51,13 @@ class PlotConfig:
 
 
 @dataclass(slots=True)
+class EstimatorConfig:
+    enable_intrinsic_dim: bool = False
+    intrinsic_dim_k: int = 10
+    intrinsic_dim_estimate_clean: bool = True
+
+
+@dataclass(slots=True)
 class ExperimentConfig:
     name: str = "nase_experiment"
     output_root: Path = Path("results")
@@ -59,3 +66,4 @@ class ExperimentConfig:
     spectral: SpectralConfig = field(default_factory=SpectralConfig)
     cutoff: CutoffConfig = field(default_factory=CutoffConfig)
     plot: PlotConfig = field(default_factory=PlotConfig)
+    estimators: EstimatorConfig = field(default_factory=EstimatorConfig)

@@ -1,0 +1,20 @@
+{
+  "cases": [
+    {
+      "case": "swiss_roll_high_noise",
+      "continuity_mean": 0.532375,
+      "geodesic_consistency_mean": -0.015842975136395546,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.8840373862158648
+    },
+    {
+      "case": "swiss_roll_low_noise",
+      "continuity_mean": 0.51125,
+      "geodesic_consistency_mean": -0.01519182951524244,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.896572821846554
+    }
+  ]
+}

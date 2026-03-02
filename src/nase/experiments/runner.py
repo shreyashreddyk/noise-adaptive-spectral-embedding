@@ -12,6 +12,7 @@ from nase.config import ExperimentConfig
 from nase.cutoffs.bandwidth_stability import StabilityResult, select_k_bandwidth_stability
 from nase.cutoffs.eigengap import select_k_eigengap
 from nase.data.synthetic import SyntheticManifoldData, generate_synthetic
+from nase.estimators.intrinsic_dimension import levina_bickel_mle_intrinsic_dimension
 from nase.experiments.configs import config_from_dict, config_to_dict
 from nase.experiments.io import make_run_dir, write_json, write_yaml
 from nase.graphs.distances import choose_distance_backend
@@ -53,6 +54,8 @@ class ComputationBundle:
     oracle_distances: dict[int, float]
     selected_k: int
     known_noise_r: float
+    estimated_intrinsic_dim_noisy: float | None
+    estimated_intrinsic_dim_clean: float | None
 
 
 def _compute_operator(points: np.ndarray, epsilon: float, config: ExperimentConfig) -> np.ndarray:
@@ -170,6 +173,14 @@ def _compute_bundle(config: ExperimentConfig) -> ComputationBundle:
     else:
         selected_k = stability_result.k_star
 
+    dim_noisy: float | None = None
+    dim_clean: float | None = None
+    if config.estimators.enable_intrinsic_dim:
+        id_k = min(config.estimators.intrinsic_dim_k, config.data.n_samples - 1)
+        dim_noisy = float(levina_bickel_mle_intrinsic_dimension(noisy_points, k=id_k))
+        if config.estimators.intrinsic_dim_estimate_clean:
+            dim_clean = float(levina_bickel_mle_intrinsic_dimension(clean_points, k=id_k))
+
     return ComputationBundle(
         clean_points=clean_points,
         noisy_points=noisy_points,
@@ -188,6 +199,8 @@ def _compute_bundle(config: ExperimentConfig) -> ComputationBundle:
         oracle_distances={int(k): float(v) for k, v in oracle_distances.items()},
         selected_k=int(selected_k),
         known_noise_r=float(data.metadata["r"]),
+        estimated_intrinsic_dim_noisy=dim_noisy,
+        estimated_intrinsic_dim_clean=dim_clean,
     )
 
 
@@ -248,13 +261,16 @@ def _write_plots(
             dpi=dpi,
             colorbar_label="Latent parameter",
         )
+        ablation_data: dict[str, float] = {
+            "eigengap_k": float(bundle.k_eigengap),
+            "stability_k": float(bundle.stability_result.k_star),
+            "oracle_k": float(bundle.k_oracle),
+            "selected_k": float(selected_k),
+        }
+        if bundle.estimated_intrinsic_dim_noisy is not None:
+            ablation_data["intrinsic_dim_k"] = float(np.ceil(bundle.estimated_intrinsic_dim_noisy))
         plot_cutoff_ablation(
-            {
-                "eigengap_k": float(bundle.k_eigengap),
-                "stability_k": float(bundle.stability_result.k_star),
-                "oracle_k": float(bundle.k_oracle),
-                "selected_k": float(selected_k),
-            },
+            ablation_data,
             metric_name="Chosen cutoff",
             out_path=figures_dir / f"ablation_cutoff.{ext}",
             dpi=dpi,
@@ -287,6 +303,13 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         ),
     }
 
+    intrinsic_dim_block: dict[str, Any] = {}
+    if bundle.estimated_intrinsic_dim_noisy is not None:
+        intrinsic_dim_block["estimated_intrinsic_dim_noisy"] = bundle.estimated_intrinsic_dim_noisy
+        intrinsic_dim_block["k_intrinsic_dim"] = int(np.ceil(bundle.estimated_intrinsic_dim_noisy))
+    if bundle.estimated_intrinsic_dim_clean is not None:
+        intrinsic_dim_block["estimated_intrinsic_dim_clean"] = bundle.estimated_intrinsic_dim_clean
+
     metrics: dict[str, Any] = {
         "metadata": {
             "seed": config.data.seed,
@@ -301,6 +324,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         "k_eigengap": int(bundle.k_eigengap),
         "k_bandwidth_stability": int(bundle.stability_result.k_star),
         "k_oracle": int(bundle.k_oracle),
+        **intrinsic_dim_block,
         "bandwidth_stability_scores": {
             str(k): v for k, v in bundle.stability_result.per_k_stability.items()
         },
@@ -314,6 +338,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         "eigengap_k": int(bundle.k_eigengap),
         "bandwidth_stability_k": int(bundle.stability_result.k_star),
         "oracle_k": int(bundle.k_oracle),
+        **intrinsic_dim_block,
         "stability_threshold": float(config.cutoff.stability_threshold),
         "oracle_subspace_distance_by_k": {str(k): v for k, v in bundle.oracle_distances.items()},
     }

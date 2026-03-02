@@ -10,6 +10,7 @@ import yaml
 from nase.config import (
     CutoffConfig,
     DataConfig,
+    EstimatorConfig,
     ExperimentConfig,
     GraphConfig,
     PlotConfig,
@@ -26,6 +27,7 @@ def _build_config(raw: dict[str, Any]) -> ExperimentConfig:
         spectral=SpectralConfig(**raw.get("spectral", {})),
         cutoff=CutoffConfig(**raw.get("cutoff", {})),
         plot=PlotConfig(**raw.get("plot", {})),
+        estimators=EstimatorConfig(**raw.get("estimators", {})),
     )
 
 
@@ -73,6 +75,9 @@ def _validate_config(config: ExperimentConfig) -> None:
     if unknown_formats:
         unknown = ", ".join(unknown_formats)
         raise ValueError(f"Unsupported plot formats: {unknown}")
+
+    if config.estimators.intrinsic_dim_k < 2:
+        raise ValueError("estimators.intrinsic_dim_k must be >= 2")
 
 
 def load_config(path: Path) -> ExperimentConfig:

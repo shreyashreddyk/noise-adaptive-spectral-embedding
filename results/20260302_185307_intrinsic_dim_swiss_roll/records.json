@@ -1,0 +1,56 @@
+{
+  "records": [
+    {
+      "case": "swiss_roll_low_noise",
+      "continuity": 0.46599999999999997,
+      "estimated_intrinsic_dim_noisy": 1.9732482280721686,
+      "geodesic_consistency": -0.015766654152006364,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 12,
+      "k_intrinsic_dim": 2,
+      "run_dir": "results/20260302_185307_intrinsic_dim_swiss_roll/runs/20260302_185308_intrinsic_dim_swiss_roll_swiss_roll_low_noise_seed11",
+      "seed": 11,
+      "selected_k": 1,
+      "trustworthiness": 0.8449505851755527
+    },
+    {
+      "case": "swiss_roll_low_noise",
+      "continuity": 0.5565000000000001,
+      "estimated_intrinsic_dim_noisy": 2.0556496290686077,
+      "geodesic_consistency": -0.014617004878478517,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 12,
+      "k_intrinsic_dim": 3,
+      "run_dir": "results/20260302_185307_intrinsic_dim_swiss_roll/runs/20260302_185311_intrinsic_dim_swiss_roll_swiss_roll_low_noise_seed22",
+      "seed": 22,
+      "selected_k": 1,
+      "trustworthiness": 0.9481950585175553
+    },
+    {
+      "case": "swiss_roll_high_noise",
+      "continuity": 0.472,
+      "estimated_intrinsic_dim_noisy": 2.1510645779581608,
+      "geodesic_consistency": -0.017152202271159794,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 12,
+      "k_intrinsic_dim": 3,
+      "run_dir": "results/20260302_185307_intrinsic_dim_swiss_roll/runs/20260302_185314_intrinsic_dim_swiss_roll_swiss_roll_high_noise_seed11",
+      "seed": 11,
+      "selected_k": 1,
+      "trustworthiness": 0.8308667100130039
+    },
+    {
+      "case": "swiss_roll_high_noise",
+      "continuity": 0.59275,
+      "estimated_intrinsic_dim_noisy": 2.2030525919354833,
+      "geodesic_consistency": -0.0145337480016313,
+      "k_bandwidth_stability": 1,
+      "k_eigengap": 11,
+      "k_intrinsic_dim": 3,
+      "run_dir": "results/20260302_185307_intrinsic_dim_swiss_roll/runs/20260302_185317_intrinsic_dim_swiss_roll_swiss_roll_high_noise_seed22",
+      "seed": 22,
+      "selected_k": 1,
+      "trustworthiness": 0.9372080624187256
+    }
+  ]
+}
