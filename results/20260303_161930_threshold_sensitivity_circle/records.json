@@ -1,0 +1,136 @@
+{
+  "records": [
+    {
+      "case": "tau_080",
+      "continuity": 0.5811111111111111,
+      "geodesic_consistency": 0.7479423737818036,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_161931_threshold_sensitivity_circle_tau_080_seed11",
+      "seed": 11,
+      "selected_k": 6,
+      "trustworthiness": 0.9924531389847846
+    },
+    {
+      "case": "tau_080",
+      "continuity": 0.5882222222222222,
+      "geodesic_consistency": 0.7730224361035835,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_161939_threshold_sensitivity_circle_tau_080_seed22",
+      "seed": 22,
+      "selected_k": 6,
+      "trustworthiness": 0.9932034266717811
+    },
+    {
+      "case": "tau_080",
+      "continuity": 0.583111111111111,
+      "geodesic_consistency": 0.7888357232588313,
+      "k_bandwidth_stability": 7,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_161946_threshold_sensitivity_circle_tau_080_seed33",
+      "seed": 33,
+      "selected_k": 7,
+      "trustworthiness": 0.9931497250990922
+    },
+    {
+      "case": "tau_085",
+      "continuity": 0.5811111111111111,
+      "geodesic_consistency": 0.7479423737818036,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_161951_threshold_sensitivity_circle_tau_085_seed11",
+      "seed": 11,
+      "selected_k": 6,
+      "trustworthiness": 0.9924531389847846
+    },
+    {
+      "case": "tau_085",
+      "continuity": 0.5882222222222222,
+      "geodesic_consistency": 0.7730224361035835,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162001_threshold_sensitivity_circle_tau_085_seed22",
+      "seed": 22,
+      "selected_k": 6,
+      "trustworthiness": 0.9932034266717811
+    },
+    {
+      "case": "tau_085",
+      "continuity": 0.583111111111111,
+      "geodesic_consistency": 0.7888357232588313,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162008_threshold_sensitivity_circle_tau_085_seed33",
+      "seed": 33,
+      "selected_k": 6,
+      "trustworthiness": 0.9931497250990922
+    },
+    {
+      "case": "tau_090",
+      "continuity": 0.5811111111111111,
+      "geodesic_consistency": 0.7479423737818036,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162013_threshold_sensitivity_circle_tau_090_seed11",
+      "seed": 11,
+      "selected_k": 6,
+      "trustworthiness": 0.9924531389847846
+    },
+    {
+      "case": "tau_090",
+      "continuity": 0.5882222222222222,
+      "geodesic_consistency": 0.7730224361035835,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162019_threshold_sensitivity_circle_tau_090_seed22",
+      "seed": 22,
+      "selected_k": 6,
+      "trustworthiness": 0.9932034266717811
+    },
+    {
+      "case": "tau_090",
+      "continuity": 0.583111111111111,
+      "geodesic_consistency": 0.7888357232588313,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162023_threshold_sensitivity_circle_tau_090_seed33",
+      "seed": 33,
+      "selected_k": 6,
+      "trustworthiness": 0.9931497250990922
+    },
+    {
+      "case": "tau_095",
+      "continuity": 0.5811111111111111,
+      "geodesic_consistency": 0.7479423737818036,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162028_threshold_sensitivity_circle_tau_095_seed11",
+      "seed": 11,
+      "selected_k": 6,
+      "trustworthiness": 0.9924531389847846
+    },
+    {
+      "case": "tau_095",
+      "continuity": 0.5882222222222222,
+      "geodesic_consistency": 0.7730224361035835,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162033_threshold_sensitivity_circle_tau_095_seed22",
+      "seed": 22,
+      "selected_k": 6,
+      "trustworthiness": 0.9932034266717811
+    },
+    {
+      "case": "tau_095",
+      "continuity": 0.583111111111111,
+      "geodesic_consistency": 0.7888357232588313,
+      "k_bandwidth_stability": 6,
+      "k_eigengap": 2,
+      "run_dir": "results/20260303_161930_threshold_sensitivity_circle/runs/20260303_162038_threshold_sensitivity_circle_tau_095_seed33",
+      "seed": 33,
+      "selected_k": 6,
+      "trustworthiness": 0.9931497250990922
+    }
+  ]
+}

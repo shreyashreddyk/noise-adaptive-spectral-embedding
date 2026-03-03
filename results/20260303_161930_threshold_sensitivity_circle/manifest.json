@@ -1,0 +1,63 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/synthetic_plan_base.yaml",
+  "cases": [
+    {
+      "name": "tau_080",
+      "overrides": {
+        "cutoff": {
+          "stability_threshold": 0.8
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "tau_085",
+      "overrides": {
+        "cutoff": {
+          "stability_threshold": 0.85
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "tau_090",
+      "overrides": {
+        "cutoff": {
+          "stability_threshold": 0.9
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "tau_095",
+      "overrides": {
+        "cutoff": {
+          "stability_threshold": 0.95
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.08
+        }
+      }
+    }
+  ],
+  "name": "threshold_sensitivity_circle",
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

@@ -1,0 +1,23 @@
+name: torus_noise_sweep
+output_root: results
+base_config: synthetic_plan_base.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: torus_r_0p02
+    overrides:
+      data:
+        manifold: torus
+        ambient_dim: 5
+        noise_std: 0.02
+  - name: torus_r_0p08
+    overrides:
+      data:
+        manifold: torus
+        ambient_dim: 5
+        noise_std: 0.08
+  - name: torus_r_0p16
+    overrides:
+      data:
+        manifold: torus
+        ambient_dim: 5
+        noise_std: 0.16

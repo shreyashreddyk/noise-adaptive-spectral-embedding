@@ -1,0 +1,52 @@
+{
+  "cases": [
+    {
+      "case": "circle_r_0p02_known",
+      "continuity_mean": 0.8851111111111113,
+      "geodesic_consistency_mean": 0.7781988121244762,
+      "selected_k_mean": 12.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.9996851212547414
+    },
+    {
+      "case": "circle_r_0p08_known",
+      "continuity_mean": 0.5841481481481482,
+      "geodesic_consistency_mean": 0.7699335110480728,
+      "selected_k_mean": 2.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.9929354302518859
+    },
+    {
+      "case": "circle_r_0p16_known",
+      "continuity_mean": 0.17918518518518523,
+      "geodesic_consistency_mean": 0.5648121217520258,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.7435495887141457
+    },
+    {
+      "case": "sphere_r_0p02_known",
+      "continuity_mean": 0.43955555555555553,
+      "geodesic_consistency_mean": 0.44211996237890877,
+      "selected_k_mean": 12.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.8552527809742999
+    },
+    {
+      "case": "sphere_r_0p08_known",
+      "continuity_mean": 0.4032592592592592,
+      "geodesic_consistency_mean": 0.43471694754565443,
+      "selected_k_mean": 2.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.8542989387546349
+    },
+    {
+      "case": "sphere_r_0p16_known",
+      "continuity_mean": 0.10733333333333334,
+      "geodesic_consistency_mean": 0.13606445832839675,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.6847139751949879
+    }
+  ]
+}

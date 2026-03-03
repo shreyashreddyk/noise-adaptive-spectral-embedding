@@ -1,0 +1,59 @@
+name: r_validation_known_r
+output_root: results
+base_config: r_based_plan_base.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: circle_r_0p02_known
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.02
+      cutoff:
+        use_estimated_r: false
+        r_constant: 0.015
+  - name: circle_r_0p08_known
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+      cutoff:
+        use_estimated_r: false
+        r_constant: 0.015
+  - name: circle_r_0p16_known
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.16
+      cutoff:
+        use_estimated_r: false
+        r_constant: 0.015
+  - name: sphere_r_0p02_known
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.02
+      cutoff:
+        use_estimated_r: false
+        r_constant: 0.018
+  - name: sphere_r_0p08_known
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.08
+      cutoff:
+        use_estimated_r: false
+        r_constant: 0.018
+  - name: sphere_r_0p16_known
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.16
+      cutoff:
+        use_estimated_r: false
+        r_constant: 0.018

@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "case": "torus_r_0p02",
+      "continuity_mean": 0.28881481481481486,
+      "geodesic_consistency_mean": 0.7840045872571233,
+      "selected_k_mean": 8.666666666666666,
+      "selected_k_std": 2.081665999466133,
+      "trustworthiness_mean": 0.9680242083280057
+    },
+    {
+      "case": "torus_r_0p08",
+      "continuity_mean": 0.29748148148148146,
+      "geodesic_consistency_mean": 0.7821276720708182,
+      "selected_k_mean": 10.0,
+      "selected_k_std": 2.6457513110645907,
+      "trustworthiness_mean": 0.9669109662021054
+    },
+    {
+      "case": "torus_r_0p16",
+      "continuity_mean": 0.3122962962962963,
+      "geodesic_consistency_mean": 0.7743848744318513,
+      "selected_k_mean": 8.666666666666666,
+      "selected_k_std": 2.8867513459481287,
+      "trustworthiness_mean": 0.9635296424157184
+    }
+  ]
+}

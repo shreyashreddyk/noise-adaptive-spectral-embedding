@@ -1,0 +1,36 @@
+{
+  "cases": [
+    {
+      "case": "tau_080",
+      "continuity_mean": 0.5841481481481482,
+      "geodesic_consistency_mean": 0.7699335110480728,
+      "selected_k_mean": 6.333333333333333,
+      "selected_k_std": 0.5773502691896258,
+      "trustworthiness_mean": 0.9929354302518859
+    },
+    {
+      "case": "tau_085",
+      "continuity_mean": 0.5841481481481482,
+      "geodesic_consistency_mean": 0.7699335110480728,
+      "selected_k_mean": 6.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.9929354302518859
+    },
+    {
+      "case": "tau_090",
+      "continuity_mean": 0.5841481481481482,
+      "geodesic_consistency_mean": 0.7699335110480728,
+      "selected_k_mean": 6.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.9929354302518859
+    },
+    {
+      "case": "tau_095",
+      "continuity_mean": 0.5841481481481482,
+      "geodesic_consistency_mean": 0.7699335110480728,
+      "selected_k_mean": 6.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.9929354302518859
+    }
+  ]
+}

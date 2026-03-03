@@ -1,0 +1,41 @@
+name: r_estimation_swiss_roll
+output_root: results
+base_config: r_based_plan_base.yaml
+seeds: [11, 22]
+cases:
+  - name: swiss_roll_r_0p03_estimated
+    overrides:
+      data:
+        manifold: swiss_roll
+        n_samples: 400
+        ambient_dim: 3
+        noise_std: 0.03
+      graph:
+        epsilon_grid: [0.5, 1.0, 2.0, 3.0]
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: swiss_roll_r_0p08_estimated
+    overrides:
+      data:
+        manifold: swiss_roll
+        n_samples: 400
+        ambient_dim: 3
+        noise_std: 0.08
+      graph:
+        epsilon_grid: [0.5, 1.0, 2.0, 3.0]
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: swiss_roll_r_0p16_estimated
+    overrides:
+      data:
+        manifold: swiss_roll
+        n_samples: 400
+        ambient_dim: 3
+        noise_std: 0.16
+      graph:
+        epsilon_grid: [0.5, 1.0, 2.0, 3.0]
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015

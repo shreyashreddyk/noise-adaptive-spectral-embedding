@@ -1,0 +1,103 @@
+{
+  "records": [
+    {
+      "case": "torus_r_0p02",
+      "continuity": 0.27955555555555556,
+      "geodesic_consistency": 0.7680260241711794,
+      "k_bandwidth_stability": 7,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_161931_torus_noise_sweep_torus_r_0p02_seed11",
+      "seed": 11,
+      "selected_k": 7,
+      "trustworthiness": 0.9668671525380386
+    },
+    {
+      "case": "torus_r_0p02",
+      "continuity": 0.29244444444444445,
+      "geodesic_consistency": 0.7714675489197995,
+      "k_bandwidth_stability": 8,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_161939_torus_noise_sweep_torus_r_0p02_seed22",
+      "seed": 22,
+      "selected_k": 8,
+      "trustworthiness": 0.9683943229766014
+    },
+    {
+      "case": "torus_r_0p02",
+      "continuity": 0.2944444444444445,
+      "geodesic_consistency": 0.8125201886803912,
+      "k_bandwidth_stability": 11,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_161947_torus_noise_sweep_torus_r_0p02_seed33",
+      "seed": 33,
+      "selected_k": 11,
+      "trustworthiness": 0.9688111494693773
+    },
+    {
+      "case": "torus_r_0p08",
+      "continuity": 0.29244444444444445,
+      "geodesic_consistency": 0.7683647735196246,
+      "k_bandwidth_stability": 7,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_161952_torus_noise_sweep_torus_r_0p08_seed11",
+      "seed": 11,
+      "selected_k": 7,
+      "trustworthiness": 0.9664267996419895
+    },
+    {
+      "case": "torus_r_0p08",
+      "continuity": 0.3035555555555555,
+      "geodesic_consistency": 0.7682239957764093,
+      "k_bandwidth_stability": 12,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_162002_torus_noise_sweep_torus_r_0p08_seed22",
+      "seed": 22,
+      "selected_k": 12,
+      "trustworthiness": 0.9679304436772791
+    },
+    {
+      "case": "torus_r_0p08",
+      "continuity": 0.2964444444444444,
+      "geodesic_consistency": 0.8097942469164207,
+      "k_bandwidth_stability": 11,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_162009_torus_noise_sweep_torus_r_0p08_seed33",
+      "seed": 33,
+      "selected_k": 11,
+      "trustworthiness": 0.9663756552870477
+    },
+    {
+      "case": "torus_r_0p16",
+      "continuity": 0.32155555555555554,
+      "geodesic_consistency": 0.7631825157393515,
+      "k_bandwidth_stability": 7,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_162014_torus_noise_sweep_torus_r_0p16_seed11",
+      "seed": 11,
+      "selected_k": 7,
+      "trustworthiness": 0.9636522183863956
+    },
+    {
+      "case": "torus_r_0p16",
+      "continuity": 0.30977777777777776,
+      "geodesic_consistency": 0.7596084389118499,
+      "k_bandwidth_stability": 12,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_162019_torus_noise_sweep_torus_r_0p16_seed22",
+      "seed": 22,
+      "selected_k": 12,
+      "trustworthiness": 0.964293568597366
+    },
+    {
+      "case": "torus_r_0p16",
+      "continuity": 0.3055555555555556,
+      "geodesic_consistency": 0.8003636686443526,
+      "k_bandwidth_stability": 7,
+      "k_eigengap": 4,
+      "run_dir": "results/20260303_161930_torus_noise_sweep/runs/20260303_162024_torus_noise_sweep_torus_r_0p16_seed33",
+      "seed": 33,
+      "selected_k": 7,
+      "trustworthiness": 0.9626431402633935
+    }
+  ]
+}

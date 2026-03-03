@@ -1,0 +1,37 @@
+name: threshold_sensitivity_circle
+output_root: results
+base_config: synthetic_plan_base.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: tau_080
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+      cutoff:
+        stability_threshold: 0.80
+  - name: tau_085
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+      cutoff:
+        stability_threshold: 0.85
+  - name: tau_090
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+      cutoff:
+        stability_threshold: 0.90
+  - name: tau_095
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+      cutoff:
+        stability_threshold: 0.95

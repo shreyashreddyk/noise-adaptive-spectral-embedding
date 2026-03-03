@@ -86,6 +86,11 @@ def run_sweep(config_path: Path) -> SweepResult:
             if "estimated_intrinsic_dim_noisy" in metrics:
                 record["estimated_intrinsic_dim_noisy"] = metrics["estimated_intrinsic_dim_noisy"]
                 record["k_intrinsic_dim"] = metrics["k_intrinsic_dim"]
+            if "r_estimated_simple" in metrics:
+                record["r_estimated_simple"] = metrics["r_estimated_simple"]
+                record["r_estimated_twoscale"] = metrics["r_estimated_twoscale"]
+                record["k_r_based"] = metrics["k_r_based"]
+                record["known_noise_r"] = metrics["known_noise_r"]
             records.append(record)
 
     aggregate = _aggregate(records)

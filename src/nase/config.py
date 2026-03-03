@@ -42,6 +42,9 @@ class CutoffConfig:
     stability_min_k: int = 1
     stability_max_k: int = 20
     stability_threshold: float = 0.9
+    r_constant: float = 1.0
+    r_estimation_k: int = 2
+    use_estimated_r: bool = False
 
 
 @dataclass(slots=True)

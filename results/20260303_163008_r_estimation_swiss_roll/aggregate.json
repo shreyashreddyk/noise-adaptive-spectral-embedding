@@ -1,0 +1,28 @@
+{
+  "cases": [
+    {
+      "case": "swiss_roll_r_0p03_estimated",
+      "continuity_mean": 0.51125,
+      "geodesic_consistency_mean": -0.01519182951524244,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.896572821846554
+    },
+    {
+      "case": "swiss_roll_r_0p08_estimated",
+      "continuity_mean": 0.5263749999999999,
+      "geodesic_consistency_mean": -0.014652650831609148,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.8805383615084525
+    },
+    {
+      "case": "swiss_roll_r_0p16_estimated",
+      "continuity_mean": 0.532375,
+      "geodesic_consistency_mean": -0.015842975136395546,
+      "selected_k_mean": 1.0,
+      "selected_k_std": 0.0,
+      "trustworthiness_mean": 0.8840373862158648
+    }
+  ]
+}

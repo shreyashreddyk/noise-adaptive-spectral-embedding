@@ -1,0 +1,95 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/r_based_plan_base.yaml",
+  "cases": [
+    {
+      "name": "circle_r_0p02_known",
+      "overrides": {
+        "cutoff": {
+          "r_constant": 0.015,
+          "use_estimated_r": false
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.02
+        }
+      }
+    },
+    {
+      "name": "circle_r_0p08_known",
+      "overrides": {
+        "cutoff": {
+          "r_constant": 0.015,
+          "use_estimated_r": false
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "circle_r_0p16_known",
+      "overrides": {
+        "cutoff": {
+          "r_constant": 0.015,
+          "use_estimated_r": false
+        },
+        "data": {
+          "ambient_dim": 3,
+          "manifold": "circle",
+          "noise_std": 0.16
+        }
+      }
+    },
+    {
+      "name": "sphere_r_0p02_known",
+      "overrides": {
+        "cutoff": {
+          "r_constant": 0.018,
+          "use_estimated_r": false
+        },
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.02
+        }
+      }
+    },
+    {
+      "name": "sphere_r_0p08_known",
+      "overrides": {
+        "cutoff": {
+          "r_constant": 0.018,
+          "use_estimated_r": false
+        },
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "sphere_r_0p16_known",
+      "overrides": {
+        "cutoff": {
+          "r_constant": 0.018,
+          "use_estimated_r": false
+        },
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "sphere",
+          "noise_std": 0.16
+        }
+      }
+    }
+  ],
+  "name": "r_validation_known_r",
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

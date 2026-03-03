@@ -65,8 +65,8 @@ def _validate_config(config: ExperimentConfig) -> None:
         raise ValueError("cutoff stability_min_k must be <= stability_max_k")
     if not (0.0 <= config.cutoff.stability_threshold <= 1.0):
         raise ValueError("cutoff.stability_threshold must be in [0, 1]")
-    if config.cutoff.method not in {"eigengap", "bandwidth_stability"}:
-        raise ValueError("cutoff.method must be 'eigengap' or 'bandwidth_stability'")
+    if config.cutoff.method not in {"eigengap", "bandwidth_stability", "r_based"}:
+        raise ValueError("cutoff.method must be 'eigengap', 'bandwidth_stability', or 'r_based'")
 
     if config.plot.dpi <= 0:
         raise ValueError("plot.dpi must be > 0")

@@ -11,8 +11,13 @@ import yaml
 from nase.config import ExperimentConfig
 from nase.cutoffs.bandwidth_stability import StabilityResult, select_k_bandwidth_stability
 from nase.cutoffs.eigengap import select_k_eigengap
+from nase.cutoffs.r_based_stub import select_k_from_noise
 from nase.data.synthetic import SyntheticManifoldData, generate_synthetic
 from nase.estimators.intrinsic_dimension import levina_bickel_mle_intrinsic_dimension
+from nase.estimators.noise_amplitude import (
+    estimate_noise_amplitude_simple,
+    estimate_noise_amplitude_twoscale,
+)
 from nase.experiments.configs import config_from_dict, config_to_dict
 from nase.experiments.io import make_run_dir, write_json, write_yaml
 from nase.graphs.distances import choose_distance_backend
@@ -56,6 +61,9 @@ class ComputationBundle:
     known_noise_r: float
     estimated_intrinsic_dim_noisy: float | None
     estimated_intrinsic_dim_clean: float | None
+    r_estimated_simple: float | None
+    r_estimated_twoscale: float | None
+    k_r_based: int | None
 
 
 def _compute_operator(points: np.ndarray, epsilon: float, config: ExperimentConfig) -> np.ndarray:
@@ -168,8 +176,31 @@ def _compute_bundle(config: ExperimentConfig) -> ComputationBundle:
         max_k=min(config.cutoff.stability_max_k, config.spectral.n_eigs - 1),
     )
 
+    r_est_simple: float | None = None
+    r_est_twoscale: float | None = None
+    k_r_based: int | None = None
+
+    if config.cutoff.method == "r_based":
+        r_est_k = max(1, config.cutoff.r_estimation_k)
+        r_est_simple = float(estimate_noise_amplitude_simple(noisy_points, k=r_est_k))
+        r_est_twoscale = float(
+            estimate_noise_amplitude_twoscale(noisy_points, k1=1, k2=max(2, r_est_k * 2))
+        )
+        if config.cutoff.use_estimated_r:
+            r_for_cutoff = r_est_simple
+        else:
+            r_for_cutoff = float(data.metadata["r"])
+        k_r_based = select_k_from_noise(
+            r=r_for_cutoff,
+            c_constant=config.cutoff.r_constant,
+            min_k=config.cutoff.stability_min_k,
+            max_k=config.cutoff.stability_max_k,
+        )
+
     if config.cutoff.method == "eigengap":
         selected_k = k_eigengap
+    elif config.cutoff.method == "r_based":
+        selected_k = k_r_based if k_r_based is not None else stability_result.k_star
     else:
         selected_k = stability_result.k_star
 
@@ -201,6 +232,9 @@ def _compute_bundle(config: ExperimentConfig) -> ComputationBundle:
         known_noise_r=float(data.metadata["r"]),
         estimated_intrinsic_dim_noisy=dim_noisy,
         estimated_intrinsic_dim_clean=dim_clean,
+        r_estimated_simple=r_est_simple,
+        r_estimated_twoscale=r_est_twoscale,
+        k_r_based=k_r_based,
     )
 
 
@@ -269,6 +303,8 @@ def _write_plots(
         }
         if bundle.estimated_intrinsic_dim_noisy is not None:
             ablation_data["intrinsic_dim_k"] = float(np.ceil(bundle.estimated_intrinsic_dim_noisy))
+        if bundle.k_r_based is not None:
+            ablation_data["r_based_k"] = float(bundle.k_r_based)
         plot_cutoff_ablation(
             ablation_data,
             metric_name="Chosen cutoff",
@@ -285,7 +321,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         embedding=selected_embedding,
         intrinsic_coords=bundle.intrinsic_coords,
     )
-    quality_by_cutoff = {
+    quality_by_cutoff: dict[str, Any] = {
         "eigengap": _evaluate_metrics(
             high_dim=bundle.noisy_points,
             embedding=bundle.base_embedding_noisy[:, : bundle.k_eigengap],
@@ -302,6 +338,12 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
             intrinsic_coords=bundle.intrinsic_coords,
         ),
     }
+    if bundle.k_r_based is not None:
+        quality_by_cutoff["r_based"] = _evaluate_metrics(
+            high_dim=bundle.noisy_points,
+            embedding=bundle.base_embedding_noisy[:, : bundle.k_r_based],
+            intrinsic_coords=bundle.intrinsic_coords,
+        )
 
     intrinsic_dim_block: dict[str, Any] = {}
     if bundle.estimated_intrinsic_dim_noisy is not None:
@@ -309,6 +351,14 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         intrinsic_dim_block["k_intrinsic_dim"] = int(np.ceil(bundle.estimated_intrinsic_dim_noisy))
     if bundle.estimated_intrinsic_dim_clean is not None:
         intrinsic_dim_block["estimated_intrinsic_dim_clean"] = bundle.estimated_intrinsic_dim_clean
+
+    r_estimation_block: dict[str, Any] = {}
+    if bundle.r_estimated_simple is not None:
+        r_estimation_block["r_estimated_simple"] = bundle.r_estimated_simple
+    if bundle.r_estimated_twoscale is not None:
+        r_estimation_block["r_estimated_twoscale"] = bundle.r_estimated_twoscale
+    if bundle.k_r_based is not None:
+        r_estimation_block["k_r_based"] = bundle.k_r_based
 
     metrics: dict[str, Any] = {
         "metadata": {
@@ -325,6 +375,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         "k_bandwidth_stability": int(bundle.stability_result.k_star),
         "k_oracle": int(bundle.k_oracle),
         **intrinsic_dim_block,
+        **r_estimation_block,
         "bandwidth_stability_scores": {
             str(k): v for k, v in bundle.stability_result.per_k_stability.items()
         },
@@ -339,6 +390,7 @@ def run_experiment(config: ExperimentConfig) -> RunResult:
         "bandwidth_stability_k": int(bundle.stability_result.k_star),
         "oracle_k": int(bundle.k_oracle),
         **intrinsic_dim_block,
+        **r_estimation_block,
         "stability_threshold": float(config.cutoff.stability_threshold),
         "oracle_subspace_distance_by_k": {str(k): v for k, v in bundle.oracle_distances.items()},
     }

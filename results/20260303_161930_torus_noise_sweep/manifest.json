@@ -1,0 +1,41 @@
+{
+  "base_config": "/Users/shreyashreddy/Desktop/UCSD WI26/DSC 205/Project/project_implementation/noise-adaptive-spectral-embedding/configs/synthetic_plan_base.yaml",
+  "cases": [
+    {
+      "name": "torus_r_0p02",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "torus",
+          "noise_std": 0.02
+        }
+      }
+    },
+    {
+      "name": "torus_r_0p08",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "torus",
+          "noise_std": 0.08
+        }
+      }
+    },
+    {
+      "name": "torus_r_0p16",
+      "overrides": {
+        "data": {
+          "ambient_dim": 5,
+          "manifold": "torus",
+          "noise_std": 0.16
+        }
+      }
+    }
+  ],
+  "name": "torus_noise_sweep",
+  "seeds": [
+    11,
+    22,
+    33
+  ]
+}

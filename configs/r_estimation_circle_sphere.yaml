@@ -1,0 +1,95 @@
+name: r_estimation_circle_sphere
+output_root: results
+base_config: r_based_plan_base.yaml
+seeds: [11, 22, 33]
+cases:
+  - name: circle_r_0p02_estimated
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.02
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: circle_r_0p05_estimated
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.05
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: circle_r_0p08_estimated
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.08
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: circle_r_0p12_estimated
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.12
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: circle_r_0p16_estimated
+    overrides:
+      data:
+        manifold: circle
+        ambient_dim: 3
+        noise_std: 0.16
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.015
+  - name: sphere_r_0p02_estimated
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.02
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.018
+  - name: sphere_r_0p05_estimated
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.05
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.018
+  - name: sphere_r_0p08_estimated
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.08
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.018
+  - name: sphere_r_0p12_estimated
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.12
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.018
+  - name: sphere_r_0p16_estimated
+    overrides:
+      data:
+        manifold: sphere
+        ambient_dim: 5
+        noise_std: 0.16
+      cutoff:
+        use_estimated_r: true
+        r_constant: 0.018

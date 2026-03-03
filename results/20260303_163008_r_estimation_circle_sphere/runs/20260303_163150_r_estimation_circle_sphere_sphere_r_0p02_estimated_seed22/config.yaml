@@ -1,0 +1,47 @@
+cutoff:
+  eigengap_max_k: 12
+  eigengap_min_k: 1
+  method: r_based
+  r_constant: 0.018
+  r_estimation_k: 2
+  stability_max_k: 12
+  stability_min_k: 1
+  stability_threshold: 0.9
+  use_estimated_r: true
+data:
+  ambient_dim: 5
+  intrinsic_dim: 2
+  manifold: sphere
+  n_samples: 450
+  noise_std: 0.02
+  seed: 22
+estimators:
+  enable_intrinsic_dim: false
+  intrinsic_dim_estimate_clean: true
+  intrinsic_dim_k: 10
+graph:
+  dss_max_iter: 500
+  dss_min_value: 1.0e-12
+  dss_tol: 1.0e-06
+  enable_dss: false
+  epsilon: 1.0
+  epsilon_grid:
+  - 0.5
+  - 0.8
+  - 1.0
+  - 1.4
+  - 2.0
+  knn_k: 20
+  sparse_threshold_n: 1200
+  use_knn: false
+name: r_estimation_circle_sphere_sphere_r_0p02_estimated_seed22
+output_root: results/20260303_163008_r_estimation_circle_sphere/runs
+plot:
+  dpi: 160
+  formats:
+  - png
+  - svg
+spectral:
+  alpha: 0.5
+  diffusion_time: 1
+  n_eigs: 20
