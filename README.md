@@ -1,284 +1,231 @@
 # NASE: Noise-Adaptive Spectral Embedding
 
-A reproducible toolkit for studying how additive noise degrades spectral manifold embeddings and for selecting a truncation cutoff that is robust to noise-contaminated eigenvectors.
+**Practical truncation rules for diffusion maps under noise**
 
-Built for DSC 205 (Winter 2026, UC San Diego).
+A from-scratch Python toolkit that tackles the spectral truncation problem in manifold learning: *how many eigenvectors should you keep when your data is noisy?* Built for DSC 205 (Winter 2026, UC San Diego).
 
 ---
 
-## Motivation
+## The Problem
 
-Diffusion maps and Laplacian eigenmaps work by truncating a spectral expansion at some dimension `k`. In clean data this is straightforward, but when observations are corrupted by additive noise the high-index eigenvectors increasingly reflect noise rather than manifold geometry. The standard eigengap heuristic can become ambiguous or misleading in these regimes because the gap structure flattens out.
+Diffusion maps embed high-dimensional point clouds into low-dimensional representations by computing eigenvectors of a graph operator. The critical decision is **how many eigenvectors to retain**. Keep too few and you lose structure; keep too many and you embed noise.
 
-We wanted a practical, data-driven alternative: a cutoff criterion that identifies the boundary between geometrically stable modes and noise-dominated ones, without requiring knowledge of the noise amplitude or the manifold's intrinsic dimension.
+The standard approach — the **eigengap heuristic** — picks the dimension where consecutive eigenvalues show the largest drop. This works when the spectrum has a sharp cliff, but on many real manifolds the decay is gradual and the "largest gap" is unstable across random seeds.
 
-## Approach
+The **noisy-Laplacian theory** predicts that eigenvectors split into signal and noise regimes at an index proportional to `C/r²`, where `r` is the noise standard deviation and `C` is a geometry-dependent constant. But neither `C` nor `r` is known in practice.
 
-### Baseline: eigengap heuristic
+## Our Approach
 
-The eigengap method picks `k` at the largest drop in consecutive eigenvalues within a bounded range. It is simple and well-understood, but in noisy settings the gap can be small, non-unique, or shifted.
+We implemented and compared three strategies for data-driven spectral truncation:
 
-### Primary: bandwidth-stability cutoff
+| Method | Idea | Requires |
+|--------|------|----------|
+| **Bandwidth stability** | Compute eigenvectors at multiple kernel bandwidths; signal modes stay consistent, noise modes don't | An epsilon grid |
+| **r-based cutoff** (k* = C/r²) | Estimate noise amplitude from kNN distances, plug into the theoretical formula | Calibrated C |
+| **Eigengap baseline** | Largest drop in consecutive eigenvalues | Nothing (standard) |
 
-Our main method evaluates eigenvector stability across a grid of kernel bandwidths (epsilon values). For each mode index `k`, we measure how well the k-th eigenvector aligns across operators built at different bandwidths. Modes that remain consistent are treated as signal; the cutoff `k*` is the largest index where stability exceeds a threshold (default 0.9).
+All three are compared against an **oracle** that uses clean manifold data to find the subspace-distance-minimizing cutoff.
 
-The intuition: true geometric eigenvectors are determined by the manifold and are relatively insensitive to moderate bandwidth changes. Noise-dominated modes, on the other hand, reshuffle when the bandwidth shifts.
+---
 
-### Oracle baseline
+## Key Results
 
-For synthetic experiments where we have access to clean data, we also compute an oracle cutoff by finding the `k` that minimises subspace distance between the clean and noisy leading eigenspaces. This provides an upper bound on how well any method could do.
+### Bandwidth stability adapts to noise
 
-### Phase 2: Intrinsic dimension estimation
+On manifolds with uniform curvature, the bandwidth-stability cutoff monotonically decreases as noise increases — exactly what the theory predicts.
 
-We integrated the Levina-Bickel kNN MLE intrinsic dimension estimator into the experiment pipeline. When `estimators.enable_intrinsic_dim: true` is set in a config, the runner estimates intrinsic dimension from both the noisy and clean point clouds. The estimate is reported in `metrics.json` as `estimated_intrinsic_dim_noisy` and `estimated_intrinsic_dim_clean`, and `ceil(d_hat)` is included as `k_intrinsic_dim` in the cutoff ablation plot alongside eigengap, stability, and oracle cutoffs.
+**Circle** (n=450, D=3):
 
-The intrinsic dimension estimate serves as an independent diagnostic — it gives a data-driven reference for how many dimensions the manifold actually has, which helps interpret whether the stability cutoff is retaining a reasonable number of modes.
+| Noise r | k* (stability) | k* (eigengap) | Trustworthiness |
+|---------|----------------|---------------|-----------------|
+| 0.02 | 8 ± 0.0 | 2 | 0.9997 |
+| 0.08 | 6 ± 0.0 | 2 | 0.993 |
+| 0.16 | 4 ± 0.0 | 2 | 0.981 |
 
-### Exploratory modules
+Zero seed variance. The eigengap is blind to noise level — it always picks k=2.
 
-- **Doubly stochastic scaling (DSS)**: Sinkhorn-Knopp scaling of the affinity matrix, implemented in `src/nase/robust/dss.py`. Available via `graph.enable_dss: true` in config but not used in current experiments.
+**S-curve** (ambiguous eigengap, r=0.12):
 
-## What We Built
+| Method | k* | Trustworthiness | Continuity |
+|--------|-----|-----------------|------------|
+| Eigengap | 1 | 0.879 | 0.179 |
+| Stability | 13 | 0.914 | 0.258 |
 
-| Module | Path | Purpose |
-|--------|------|---------|
-| Data generation | `src/nase/data/synthetic.py` | Circle, sphere, swiss roll, S-curve, torus with controlled Gaussian noise and random ambient embedding |
-| Graph construction | `src/nase/graphs/` | Squared-distance backends (dense + kNN sparse), Gaussian kernel with optional local scaling, alpha-normalisation, row-normalisation |
-| Spectral embedding | `src/nase/spectral/` | Symmetric eigendecomposition, diffusion operator construction, diffusion map embedding with diffusion time `t` |
-| Cutoff selection | `src/nase/cutoffs/` | Eigengap (`eigengap.py`), bandwidth stability (`bandwidth_stability.py`) |
-| Quality metrics | `src/nase/metrics/` | Trustworthiness, continuity (neighbourhood overlap), geodesic consistency (Spearman correlation with kNN shortest-path distances), subspace distance via principal angles, oracle cutoff |
-| Plotting | `src/nase/plots/` | Spectrum, eigengap bar chart, stability-vs-mode curve, stability heatmap across epsilon pairs, 2D/3D embedding scatter, cutoff ablation comparison |
-| Experiment runner | `src/nase/experiments/runner.py` | Runs a single config end-to-end: data → graph → eigendecomposition → cutoff selection → metrics → plots → serialised artifacts |
-| Sweep runner | `src/nase/experiments/sweeps.py` | Runs a multi-case, multi-seed sweep with aggregation (mean/std of `k*` and quality metrics) |
-| CLI | `src/nase/cli.py` | Three commands: `nase run`, `nase sweep`, `nase plot` |
-| Config system | `src/nase/config.py`, `src/nase/experiments/configs.py` | Typed dataclass configs loaded from YAML with deep-merge override support for sweeps |
-| Robust kernels | `src/nase/robust/dss.py` | Sinkhorn-Knopp doubly stochastic scaling (opt-in) |
-| Intrinsic dim | `src/nase/estimators/intrinsic_dimension.py` | Levina-Bickel MLE estimator, integrated into runner via `estimators.enable_intrinsic_dim` config flag |
+When the spectrum has no sharp gap, the eigengap gives a trivially low cutoff. Stability retains meaningful modes and outperforms by +3.5 pp trustworthiness.
+
+### Where it fails: the swiss roll
+
+Per-vector alignment breaks on manifolds with non-uniform curvature. On the swiss roll, even small bandwidth changes cause eigenvectors to rotate within their eigenspace, collapsing the stability cutoff to k=1. A subspace-based comparison (principal angles) would fix this — the infrastructure exists but integration is future work.
+
+### Noise estimation is hard (as predicted)
+
+The kNN noise amplitude estimator conflates manifold geometry with noise:
+
+| Manifold | r=0.02 | r=0.08 | r=0.16 |
+|----------|--------|--------|--------|
+| Circle (D=3) | 0.69× true | 0.41× true | 0.32× true |
+| Sphere (D=5) | 2.08× true | 0.82× true | 0.59× true |
+| Swiss roll | 6.88× true | 2.63× true | 1.45× true |
+
+On the circle, nearest-neighbor distances are dominated by arc length, underestimating noise. On the swiss roll, manifold distances completely dominate — the estimator returns ~0.21 regardless of true r. This validates the course feedback that "nearest neighbor distances are heavily biased by the curse of dimensionality and curvature, not just noise."
+
+Despite these biases, the r-based cutoff with estimated r shows qualitatively correct behavior on the circle (k decreases from 12 to 5 as noise increases 0.02 to 0.16).
+
+### Selected figures
+
+**Cutoff comparison across noise levels (circle)**
+
+![Method comparison — circle](results/analysis/method_comparison_circle.png)
+
+**r-estimation accuracy**
+
+![Noise estimation](results/analysis/r_estimation_simple.png)
+
+**Oracle subspace distance profile**
+
+![Subspace profile](results/analysis/oracle_subspace_profile_circle.png)
+
+**Stability scores showing signal-noise boundary (circle, r=0.02)**
+
+![Stability curve](results/20260302_174322_noise_sweep_circle_sphere/runs/20260302_174322_noise_sweep_circle_sphere_circle_r_0p02_seed11/figures/stability.png)
+
+---
+
+## Architecture
+
+```
+src/nase/
+├── data/                    # Synthetic manifold generators (circle, sphere,
+│   ├── synthetic.py         #   swiss roll, s-curve, torus) with controlled
+│   └── noise.py             #   Gaussian noise and random ambient embedding
+├── graphs/
+│   ├── distances.py         # Dense pairwise + sparse kNN distance backends
+│   └── kernels.py           # Gaussian kernel with optional local scaling
+├── spectral/
+│   └── embedding.py         # Diffusion operator construction and embedding
+├── cutoffs/
+│   ├── eigengap.py          # Eigengap heuristic
+│   ├── bandwidth_stability.py   # Bandwidth-stability cutoff (primary method)
+│   └── r_based_stub.py      # k* = C/r² cutoff with noise estimation
+├── estimators/
+│   ├── intrinsic_dimension.py   # Levina-Bickel kNN MLE
+│   └── noise_amplitude.py       # kNN noise amplitude (simple + two-scale)
+├── metrics/
+│   ├── embedding_quality.py # Trustworthiness, continuity
+│   ├── subspace.py          # Principal angles, subspace distance, oracle cutoff
+│   └── geodesic.py          # Geodesic consistency (Spearman with kNN paths)
+├── plots/
+│   ├── spectrum.py          # Scree plots, eigengap charts
+│   ├── stability.py         # Stability score curves, heatmaps
+│   ├── embeddings.py        # 2D/3D scatter visualizations
+│   ├── ablations.py         # Cutoff comparison bar charts
+│   └── analysis.py          # Cross-experiment analysis plots
+├── experiments/
+│   ├── runner.py            # Single-experiment pipeline (data → embedding → metrics → plots)
+│   ├── sweeps.py            # Multi-seed sweep orchestration with aggregation
+│   └── configs.py           # YAML loading, validation, deep-merge overrides
+├── robust/
+│   └── dss.py               # Sinkhorn-Knopp doubly stochastic scaling
+├── config.py                # Typed dataclass configuration system
+└── cli.py                   # CLI: nase run / nase sweep / nase plot
+```
+
+The pipeline is fully config-driven: every experiment is defined by a YAML file, deterministically seeded, and produces structured JSON metrics alongside figures. Sweeps iterate over cases and seeds, then aggregate results.
+
+---
 
 ## Experiments
 
-We ran experiments in phases, each controlled by YAML config files under `configs/`.
+120 experiment runs across 12 sweep/run configurations, testing 5 synthetic manifolds.
 
-### Phase 1: Synthetic noise sweeps
+| Phase | Config | What it tests | Manifolds | Runs |
+|-------|--------|---------------|-----------|------|
+| 1 | `noise_sweep_circle_sphere.yaml` | Noise adaptation | Circle, Sphere | 18 |
+| 1 | `synthetic_noise_sweep.yaml` | Swiss roll noise sweep | Swiss roll | 9 |
+| 1 | `synthetic_bandwidth_sweep.yaml` | Epsilon grid sensitivity | Swiss roll | 4 |
+| 1 | `ambiguous_gap_suite.yaml` | Eigengap vs stability | S-curve | 6 |
+| 1 | `eigengap_ambiguous_suite.yaml` | High-D eigengap test | Sphere (D=6) | 6 |
+| 1 | `threshold_sensitivity_circle.yaml` | Stability threshold τ | Circle | 12 |
+| 1 | `torus_noise_sweep.yaml` | 5th manifold generality | Torus | 9 |
+| 2a | `intrinsic_dim_circle_sphere.yaml` | Levina-Bickel estimation | Circle, Sphere | 12 |
+| 2a | `intrinsic_dim_swiss_roll.yaml` | Levina-Bickel estimation | Swiss roll | 4 |
+| 2c | `r_estimation_circle_sphere.yaml` | Noise estimation + r-based cutoff | Circle, Sphere | 30 |
+| 2c | `r_validation_known_r.yaml` | r-based cutoff (known r) | Circle, Sphere | 18 |
+| 2c | `r_estimation_swiss_roll.yaml` | Noise estimation on swiss roll | Swiss roll | 6 |
 
-These test whether the bandwidth-stability cutoff correctly adapts `k*` as noise increases on manifolds with known geometry.
+All experiment outputs (metrics, figures, arrays) are committed under `results/` for full reproducibility.
 
-| Config | Manifold | Noise levels | Seeds | Command |
-|--------|----------|-------------|-------|---------|
-| `configs/synthetic_noise_sweep.yaml` | Swiss roll | r = 0.03, 0.08, 0.16 | 11, 22, 33 | `nase sweep --config configs/synthetic_noise_sweep.yaml` |
-| `configs/noise_sweep_circle_sphere.yaml` | Circle + sphere | r = 0.02, 0.08, 0.16 | 11, 22, 33 | `nase sweep --config configs/noise_sweep_circle_sphere.yaml` |
-| `configs/synthetic_bandwidth_sweep.yaml` | Swiss roll | r = 0.08 (narrow vs wide epsilon grid) | 101, 202 | `nase sweep --config configs/synthetic_bandwidth_sweep.yaml` |
+---
 
-**Single-run configs** for quick iteration:
+## Getting Started
 
-| Config | What it does | Command |
-|--------|-------------|---------|
-| `configs/swiss_roll_stability.yaml` | Single swiss roll run, bandwidth-stability cutoff | `nase run --config configs/swiss_roll_stability.yaml` |
-| `configs/smoke_small.yaml` | Fast smoke test (120-point circle) | `nase run --config configs/smoke_small.yaml` |
-
-### Phase 1b: Ambiguous eigengap tests
-
-These compare eigengap and bandwidth-stability cutoffs in settings designed to have unclear gap structure.
-
-| Config | Manifold | Design | Seeds | Command |
-|--------|----------|--------|-------|---------|
-| `configs/eigengap_ambiguous_suite.yaml` | Sphere (D=6) | Eigengap vs stability on same noisy data (r=0.14) | 7, 8, 9 | `nase sweep --config configs/eigengap_ambiguous_suite.yaml` |
-| `configs/ambiguous_gap_suite.yaml` | S-curve | Eigengap vs stability mode comparison (r=0.12) | 7, 8, 9 | `nase sweep --config configs/ambiguous_gap_suite.yaml` |
-| `configs/ambiguous_gap_baseline.yaml` | S-curve | Single eigengap baseline run | — | `nase run --config configs/ambiguous_gap_baseline.yaml` |
-
-### Phase 2: Intrinsic dimension estimation
-
-These runs enable the Levina-Bickel intrinsic dimension estimator alongside the standard cutoff pipeline. The estimated dimension is reported in metrics and appears as `k_intrinsic_dim` in the ablation comparison.
-
-| Config | Manifold | Noise levels | Seeds | Command |
-|--------|----------|-------------|-------|---------|
-| `configs/intrinsic_dim_circle_sphere.yaml` | Circle + sphere | r = 0.02, 0.16 | 11, 22, 33 | `nase sweep --config configs/intrinsic_dim_circle_sphere.yaml` |
-| `configs/intrinsic_dim_swiss_roll.yaml` | Swiss roll | r = 0.03, 0.16 | 11, 22 | `nase sweep --config configs/intrinsic_dim_swiss_roll.yaml` |
-
-### Phase 3: Real data
-
-**TODO.** No real-data configs or loaders exist yet. This is the next planned development phase. See [Future work: real data experiments](#future-work-real-data-experiments) below for details on what this would involve.
-
-## How Data Is Created
-
-All experiments in this project use **synthetic manifold data** generated by `src/nase/data/synthetic.py`. No external datasets are downloaded or loaded. The data generation process works as follows:
-
-1. **Sample a manifold.** Points are drawn uniformly on a low-dimensional manifold (circle, sphere, swiss roll, S-curve, or torus) in its native coordinate system. Each manifold generator returns the clean points, their latent parameters (e.g., angle `theta` for a circle), and the native embedding dimension.
-
-2. **Embed in ambient space.** The clean manifold points are zero-padded to the configured `ambient_dim` and then rotated by a random orthogonal matrix (deterministic given the seed). This simulates the common real-world situation where a low-dimensional structure lives in a higher-dimensional observation space at an unknown orientation.
-
-3. **Add noise.** Isotropic Gaussian noise with standard deviation `r` (the `noise_std` config parameter) is added to every coordinate of the ambient-space points. The noise amplitude is known by construction, which allows us to compare method behaviour across controlled noise regimes.
-
-4. **Deterministic seeding.** A single `numpy.random.Generator` with the configured `seed` value controls all randomness (manifold sampling, ambient rotation, noise). Runs with the same seed and config reproduce identical data.
-
-Each experiment config specifies: `manifold`, `n_samples`, `ambient_dim`, `noise_std`, and `seed`. Sweep configs override these per-case and iterate over multiple seeds to estimate variance.
-
-The pipeline then builds a graph from the noisy points, computes spectral embeddings at multiple bandwidths, and runs the cutoff selection methods. Clean points are used only for the oracle cutoff (subspace distance between clean and noisy eigenspaces) and for the clean intrinsic dimension estimate — they are never used by the primary cutoff methods.
-
-## Results
-
-All results live under `results/`. Each sweep directory contains `aggregate.json`, `records.csv`, `records.json`, `manifest.json`, and a `runs/` subdirectory with per-seed outputs.
-
-### Noise sweep on circle and sphere (most informative)
-
-The circle/sphere noise sweep (`configs/noise_sweep_circle_sphere.yaml`) shows the clearest signal. As noise increases, the stability cutoff selects fewer dimensions, consistent with more modes being corrupted.
-
-| Case | Noise r | Mean k* | Trustworthiness | Continuity | Geodesic consistency |
-|------|---------|---------|-----------------|------------|---------------------|
-| circle_r_0p02 | 0.02 | 8.0 | 0.9997 | 0.885 | 0.778 |
-| circle_r_0p08 | 0.08 | 6.0 | 0.993 | 0.584 | 0.770 |
-| circle_r_0p16 | 0.16 | 4.0 | 0.981 | 0.453 | 0.746 |
-| sphere_r_0p02 | 0.02 | 12.0 | 0.855 | 0.440 | 0.442 |
-| sphere_r_0p08 | 0.08 | 10.7 | 0.854 | 0.403 | 0.435 |
-| sphere_r_0p16 | 0.16 | 8.0 | 0.853 | 0.320 | 0.415 |
-
-> Source: `results/20260302_174322_noise_sweep_circle_sphere/aggregate.json`
-
-The trend is monotonic: higher noise → lower `k*` → lower continuity and geodesic consistency, while trustworthiness stays high. This is the expected behaviour — the cutoff correctly removes unstable modes rather than including noise.
-
-### Eigengap vs stability in ambiguous settings
-
-On the sphere with r=0.14 (`configs/eigengap_ambiguous_suite.yaml`), the two methods diverge significantly:
-
-| Method | Mean k* | k* std |
-|--------|---------|--------|
-| Eigengap | 3.0 | 0.0 |
-| Bandwidth stability | 8.3 | 0.58 |
-
-> Source: `results/20260302_174201_eigengap_ambiguous_suite/aggregate.json`
-
-The eigengap locks onto a gap at k=3 that happens to be the largest in a flattened spectrum. The stability method retains more dimensions because those modes are in fact stable across bandwidths. (Trustworthiness and continuity are reported identically in aggregate because the sweep structure evaluates each method on the same noisy data with the same base embedding metrics.)
-
-On the S-curve with r=0.12 (`configs/ambiguous_gap_suite.yaml`), the divergence is even more pronounced:
-
-| Method | Mean k* | Trustworthiness | Continuity |
-|--------|---------|-----------------|------------|
-| Eigengap | 1.0 | 0.879 | 0.179 |
-| Bandwidth stability | 13.0 | 0.914 | 0.258 |
-
-> Source: `results/20260302_173959_ambiguous_gap_suite/aggregate.json`
-
-### Swiss roll results
-
-The swiss roll experiments (`configs/synthetic_noise_sweep.yaml`) consistently selected k*=1 across all noise levels. This appears to be an artifact of the bandwidth grid `[0.5, 1.0, 2.0, 3.0]` being too wide for the swiss roll's local geometry — stability drops sharply for all modes above k=1. The bandwidth sweep (`configs/synthetic_bandwidth_sweep.yaml`) confirms this: both narrow and wide grids yield k*=1 for the swiss roll. A finer, more locally-tuned epsilon grid would likely improve these results.
-
-> Source: `results/20260227_183932_synthetic_noise_sweep/aggregate.json`, `results/20260302_173937_synthetic_bandwidth_sweep/aggregate.json`
-
-### Phase 2: Intrinsic dimension estimates
-
-The intrinsic dimension sweeps (`configs/intrinsic_dim_circle_sphere.yaml`) compare the Levina-Bickel estimate against the true manifold dimension and the cutoff methods.
-
-| Manifold | True d | Noise r | d_hat (noisy, mean) | d_hat (clean) | k_intrinsic_dim | k_stability | k_eigengap | k_oracle |
-|----------|--------|---------|---------------------|---------------|-----------------|-------------|------------|----------|
-| Circle | 1 | 0.02 | 2.19 | 1.15 | 3 | 8 | 2 | 2 |
-| Circle | 1 | 0.16 | 3.27 | 1.15 | 4 | 4 | 2 | 2 |
-| Sphere | 2 | 0.02 | 2.42 | 2.25 | 3 | 12 | 3 | 3 |
-| Sphere | 2 | 0.16 | 4.68 | 2.25 | 5 | 8 | 3 | 3 |
-| Swiss roll | 2 | 0.03 | 2.01 | 1.97 | 2–3 | 1 | 12 | 1 |
-| Swiss roll | 2 | 0.16 | 2.18 | 1.97 | 3 | 1 | 11–12 | 1 |
-
-> Sources: `results/20260302_185211_intrinsic_dim_circle_sphere/records.json`, `results/20260302_185307_intrinsic_dim_swiss_roll/records.json`
-
-Key observations:
-
-- The clean-data estimate is close to the true dimension in all cases (circle: 1.15 vs 1, sphere: 2.25 vs 2, swiss roll: 1.97 vs 2).
-- Noise inflates the estimate: circle goes from 2.19 at r=0.02 to 3.27 at r=0.16; sphere from 2.42 to 4.68. This is expected — ambient noise adds apparent degrees of freedom.
-- The swiss roll estimate is relatively noise-robust (2.01 → 2.18), likely because its 2D structure is well-separated in 3D ambient space.
-- `k_intrinsic_dim` (ceiling of d_hat) provides a useful lower-bound reference that is closer to the true manifold dimension than the stability cutoff, which tends to retain more modes than strictly necessary.
-- The eigengap and oracle cutoffs for circle and sphere land near the true dimension (k=2 for circle, k=3 for sphere), while the stability cutoff retains more modes that are stable but may not correspond to independent manifold coordinates.
-
-### Representative figures
-
-**Figure 1: Mean selected k\* across circle/sphere noise levels**
-
-![Selected k comparison across noise levels](results/20260302_174322_noise_sweep_circle_sphere/selected_k_comparison.png)
-
-> Run: `results/20260302_174322_noise_sweep_circle_sphere/`
-
-**Figure 2: Eigenvalue spectrum for circle (r=0.02, seed 11)**
-
-![Eigenvalue spectrum](results/20260302_174322_noise_sweep_circle_sphere/runs/20260302_174322_noise_sweep_circle_sphere_circle_r_0p02_seed11/figures/spectrum.png)
-
-> Run: `results/20260302_174322_noise_sweep_circle_sphere/runs/20260302_174322_noise_sweep_circle_sphere_circle_r_0p02_seed11/`
-
-**Figure 3: Stability scores for sphere in ambiguous-gap setting (stability method, seed 7)**
-
-![Stability scores](results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174211_eigengap_ambiguous_suite_stability_ambiguous_seed7/figures/stability.png)
-
-> Run: `results/20260302_174201_eigengap_ambiguous_suite/runs/20260302_174211_eigengap_ambiguous_suite_stability_ambiguous_seed7/`
-
-**Figure 4: Eigengap vs stability k\* comparison (ambiguous-gap suite)**
-
-![Eigengap ambiguous suite comparison](results/20260302_174201_eigengap_ambiguous_suite/selected_k_comparison.png)
-
-> Run: `results/20260302_174201_eigengap_ambiguous_suite/`
-
-## Reproducibility
-
-### Environment setup
+### Installation
 
 ```bash
 git clone git@github.com:shreyashreddyk/noise-adaptive-spectral-embedding.git
 cd noise-adaptive-spectral-embedding
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .[dev]
+pip install -e .[dev]
 ```
 
 Requires Python >= 3.10. Tested on macOS (darwin 24.6.0).
 
-Optional: install pre-commit hooks so ruff lint and format checks run automatically before each commit:
+### Quick start
 
 ```bash
-pre-commit install
-```
+# Fast smoke test (~5s)
+nase run --config configs/smoke_small.yaml
 
-This uses the config in `.pre-commit-config.yaml`, which runs two hooks from `ruff-pre-commit` (v0.9.9): `ruff-check` (linting) and `ruff-format` (formatting). If either hook fails, the commit is blocked until the issues are fixed. This is the same set of checks that `make lint` runs, but enforced automatically.
-
-### Running experiments
-
-Single run:
-
-```bash
-nase run --config configs/swiss_roll_stability.yaml
-```
-
-Sweep:
-
-```bash
+# Full noise sweep (~8 min)
 nase sweep --config configs/noise_sweep_circle_sphere.yaml
-```
 
-Regenerate plots from an existing run:
+# r-estimation experiments (~4 min)
+nase sweep --config configs/r_estimation_circle_sphere.yaml
 
-```bash
+# Regenerate plots from an existing run
 nase plot --run-dir results/<run_directory>
 ```
 
-The `plot` command also accepts `--dpi`, `--formats`, and `--output-dir` options.
+### Analysis scripts
 
-### Makefile shortcuts
+```bash
+# Phase 1 analysis: oracle scaling, method comparisons, quality metrics
+python3 scripts/analyze_results.py
+
+# Phase 2c analysis: r-estimation accuracy, r-based cutoff comparison
+python3 scripts/analyze_r_estimation.py
+```
+
+### Development
 
 ```bash
 make lint       # ruff check + format check
-make test       # pytest -q
-make run-small  # quick smoke run (circle, 120 points)
-make format     # auto-fix lint + format
+make test       # pytest (49 tests across 13 files)
+make format     # auto-fix lint + formatting
 make verify     # lint + test together
 ```
 
-### Run directory layout
+Optional pre-commit hooks:
+
+```bash
+pre-commit install   # runs ruff lint + format checks before each commit
+```
+
+---
+
+## Output Structure
 
 Each single run produces:
 
 ```
 results/<timestamp>_<name>/
-├── config.yaml          # exact config used
-├── metrics.json         # cutoff values, quality scores, stability scores
-├── cutoffs.json         # cutoff comparison (eigengap, stability, oracle)
-├── arrays.npz           # embeddings, eigenvalues, eigenvectors, stability data
-└── figures/             # or plots/ in older runs
+├── config.yaml              # exact config snapshot
+├── metrics.json             # cutoff values, quality scores, stability scores,
+│                            #   noise estimation results, metrics_by_cutoff
+├── cutoffs.json             # cutoff comparison across methods
+├── arrays.npz               # embeddings, eigenvalues, eigenvectors
+└── figures/
     ├── spectrum.{png,svg}
     ├── eigengap.{png,svg}
     ├── stability.{png,svg}
@@ -288,142 +235,109 @@ results/<timestamp>_<name>/
     └── ablation_cutoff.{png,svg}
 ```
 
-Each sweep produces:
+Each sweep adds:
 
 ```
 results/<timestamp>_<name>/
-├── aggregate.json         # per-case means and std of k* and metrics
-├── records.csv            # flat table of all runs
-├── records.json           # same as CSV but JSON
-├── manifest.json          # sweep config metadata
+├── aggregate.json           # per-case means/std of k* and all quality metrics
+├── records.csv / .json      # flat table of all runs
+├── manifest.json            # sweep metadata
 ├── selected_k_comparison.png
-└── runs/                  # individual run directories (same layout as above)
+└── runs/                    # individual run directories
 ```
 
-### Runtime notes
+Cross-experiment analysis plots are generated in `results/analysis/` by the scripts in `scripts/`.
 
-- `smoke_small.yaml`: ~5 seconds
-- `swiss_roll_stability.yaml`: ~15 seconds
-- `noise_sweep_circle_sphere.yaml`: ~8–10 minutes (18 runs: 6 cases × 3 seeds)
-- `eigengap_ambiguous_suite.yaml`: ~3 minutes (6 runs)
-- `intrinsic_dim_circle_sphere.yaml`: ~1 minute (12 runs: 4 cases × 3 seeds)
-- `intrinsic_dim_swiss_roll.yaml`: ~30 seconds (4 runs: 2 cases × 2 seeds)
+---
 
-## Repository Layout
+## Evaluation Metrics
 
-```
-noise-adaptive-spectral-embedding/
-├── src/nase/
-│   ├── cli.py                    # typer CLI (run / sweep / plot)
-│   ├── config.py                 # typed dataclass configs
-│   ├── data/
-│   │   ├── synthetic.py          # manifold generators (circle, sphere, swiss roll, s-curve, torus)
-│   │   ├── noise.py              # noise utilities
-│   │   └── manifolds.py          # manifold registry
-│   ├── graphs/
-│   │   ├── distances.py          # pairwise distance backends
-│   │   ├── kernels.py            # Gaussian kernel (dense + sparse, optional local scaling)
-│   │   ├── normalisation.py      # normalisation helpers
-│   │   └── normalisations.py     # alpha-normalisation, row-normalisation
-│   ├── spectral/
-│   │   ├── eigensolvers.py       # symmetric eigensolver wrapper
-│   │   ├── embedding.py          # diffusion operator + embedding
-│   │   └── diffusion_maps.py     # diffusion map utilities
-│   ├── cutoffs/
-│   │   ├── eigengap.py           # eigengap heuristic
-│   │   ├── bandwidth_stability.py # bandwidth-stability cutoff (primary method)
-│   │   └── r_based_stub.py       # placeholder for noise-amplitude-based cutoff
-│   ├── metrics/
-│   │   ├── embedding_quality.py  # trustworthiness, continuity, geodesic consistency
-│   │   ├── subspace.py           # principal angles, subspace distance, oracle cutoff
-│   │   └── geodesic.py           # geodesic consistency wrapper
-│   ├── estimators/
-│   │   └── intrinsic_dimension.py # Levina-Bickel MLE
-│   ├── robust/
-│   │   └── dss.py                # Sinkhorn-Knopp doubly stochastic scaling
-│   ├── plots/
-│   │   ├── spectrum.py           # eigenvalue spectrum + eigengap plots
-│   │   ├── stability.py          # stability score curve
-│   │   ├── stability_heatmap.py  # epsilon-pair stability matrix
-│   │   ├── embeddings.py         # 2D/3D scatter plots
-│   │   └── ablations.py          # cutoff comparison bar chart + sweep comparisons
-│   ├── experiments/
-│   │   ├── runner.py             # single-experiment pipeline
-│   │   ├── sweeps.py             # multi-seed sweep orchestration
-│   │   ├── configs.py            # YAML loading + dict↔config conversion
-│   │   ├── io.py                 # run directory creation, JSON/YAML writing
-│   │   └── diagnostics.py        # diagnostic metadata collection
-│   └── utils.py                  # shared utilities
-├── configs/                      # experiment YAML configs (11 files)
-├── tests/                        # pytest suite (12 test files)
-├── results/                      # experiment outputs (gittracked)
-├── references/                   # project proposal and reference papers (PDFs)
-├── docs/
-│   ├── experiments.md            # experiment suite documentation
-│   ├── methodology.md            # methodology overview
-│   ├── methodological_note.md    # cutoff method rationale
-│   └── references/CITATIONS.md   # citation tracking
-├── pyproject.toml                # package config, dependencies, ruff/pytest settings
-├── Makefile                      # dev shortcuts
-├── CONTRIBUTING.md               # contributor guide
-├── .pre-commit-config.yaml       # ruff lint + format hooks (run before each commit)
-├── .gitignore                    # excludes caches, venvs, build artifacts from VCS
-└── LICENSE                       # MIT
-```
+| Metric | What it measures | Range |
+|--------|-----------------|-------|
+| **Trustworthiness** | Whether embedding neighbors are true neighbors | [0, 1] — higher is better |
+| **Continuity** | Whether original neighbors survive in the embedding | [0, 1] — higher is better |
+| **Geodesic consistency** | Spearman correlation of embedding distances with kNN shortest-path distances | [-1, 1] — higher is better |
+| **Subspace distance** | Chordal distance between clean and noisy eigenspaces (oracle only) | [0, 1] — lower is better |
 
-**What is and isn't tracked by git.** The `.gitignore` excludes `.venv/`, `__pycache__/`, `.pytest_cache/`, `.ruff_cache/`, `build/`, `dist/`, and compiled bytecode (`*.pyc`, `*.pyo`, `*.pyd`, `*.egg-info/`). Notably, `results/` is **not** gitignored — experiment outputs are committed so that the repository is a self-contained record of all runs, metrics, and figures.
+---
 
-## Limitations and Future Work
+## Limitations
 
-**Known limitations:**
+- **Per-vector alignment** fails on manifolds with non-uniform curvature (swiss roll) where eigenvectors reorder across bandwidth changes. A subspace-based stability comparison (principal angles) would fix this.
+- **Stability threshold** (τ = 0.9) is a fixed hyperparameter. Sensitivity analysis shows minimal impact on the circle, but it is decisive on the swiss roll.
+- **kNN noise estimator** conflates noise with manifold geometry, especially in higher ambient dimensions and on manifolds with large local spread.
+- **Calibrating C** requires oracle data (clean manifold access), limiting the r-based cutoff to settings where C is pre-computed or transferred from similar manifolds.
+- **Sample sizes** are moderate (n ≤ 500). Larger samples would sharpen eigenvalue separation.
+- **Synthetic data only** — real-world noise is structured and heteroscedastic, not isotropic Gaussian.
 
-- The swiss roll bandwidth grid `[0.5, 1.0, 2.0, 3.0]` is too coarse, causing the stability method to collapse to k*=1 for all noise levels. A finer, geometry-aware grid would likely produce better results. The circle and sphere experiments, which use a denser grid, do not have this problem.
-- The stability threshold (0.9) is a fixed hyperparameter. We did not perform a systematic sensitivity analysis on it.
-- All experiments use synthetic data where noise is isotropic Gaussian. Real noise is typically structured and heteroscedastic.
-- The Sinkhorn-Knopp DSS module is scaffolded but not evaluated in any experiment config. Its interaction with bandwidth stability is untested.
-- Geodesic consistency scores for the swiss roll are negative (around -1.97), suggesting the kNN geodesic approximation breaks down for that manifold geometry at the sample sizes we used.
-- The intrinsic dimension estimate from noisy data is inflated by noise (especially for the sphere at high r). It is currently reported as a diagnostic; using it to automatically cap `k*` would require a correction for noise-induced bias.
+## Future Work
 
-**Future work:**
+- **Subspace-based stability**: replace per-vector alignment with principal-angle comparison of eigenspaces. The machinery exists in `src/nase/metrics/subspace.py`.
+- **Adaptive epsilon grids**: use percentiles of the pairwise distance distribution instead of fixed values.
+- **Stability-gap heuristic**: detect the first significant drop in stability scores rather than using a fixed threshold.
+- **Real-data experiments**: single-cell RNA-seq, image patches, or MNIST digit manifolds.
+- **Noise-corrected intrinsic dimension**: use the Levina-Bickel estimate as a soft upper bound on k* with a bias correction.
 
-- Use the intrinsic dimension estimate as a soft upper bound on `k*` — for example, capping the stability cutoff at `ceil(d_hat) + margin`. This would require a calibrated noise-correction step since the Levina-Bickel MLE overestimates dimension under noise.
-- Tune the epsilon grid per manifold (or make it adaptive based on nearest-neighbour distances).
-- Evaluate DSS-regularised kernels in comparison experiments.
-- Implement principal-angle-based subspace stability (currently a stub in `bandwidth_stability.py`).
-- Sensitivity analysis on the stability threshold parameter.
-
-### Future work: real data experiments
-
-Phase 3 would extend NASE to real-world datasets where approximate manifold structure is known or can be validated. This is not yet implemented, but the planned approach is:
-
-1. **Data loading.** Add a `src/nase/data/real.py` module with loaders for standard benchmarks. Candidates include:
-   - **Single-cell RNA-seq** (e.g., a subset of the Tabula Muris dataset): cells lie on a low-dimensional developmental trajectory; the expected intrinsic dimension is 1–3; noise comes from technical dropout and biological variability.
-   - **Image patches** (e.g., 3×3 high-contrast natural image patches from the van Hateren dataset): the patch manifold is known to be approximately a Klein bottle with intrinsic dimension ~2.
-   - **MNIST digits** (single digit class): each digit class traces a low-dimensional manifold of style variations; useful for sanity-checking at moderate scale.
-
-2. **Config integration.** Add a `data.source: real` mode to `DataConfig` with a `data.dataset` field. The runner would dispatch to the real-data loader instead of `generate_synthetic`. Since real data has no clean/noisy split, the oracle cutoff and clean intrinsic dimension estimate would be unavailable — metrics would rely on trustworthiness, continuity, and the noisy intrinsic dimension estimate.
-
-3. **Validation strategy.** Without ground-truth clean data, we would validate by: (a) comparing `k*` against known intrinsic dimension of the dataset, (b) evaluating embedding quality metrics across cutoff methods, and (c) checking stability of `k*` across bootstrap resamples of the data.
-
-4. **Preprocessing.** Real data would likely need log-normalisation (for scRNA-seq), PCA pre-reduction to a moderate ambient dimension (e.g., 50), and nearest-neighbour-based epsilon selection rather than a fixed grid.
+---
 
 ## References
 
 1. Coifman, R. R., & Lafon, S. (2006). *Diffusion maps*. Applied and Computational Harmonic Analysis, 21(1), 5–30.
 2. von Luxburg, U. (2007). *A tutorial on spectral clustering*. Statistics and Computing, 17, 395–416.
-3. Zelnik-Manor, L., & Perona, P. (2004). *Self-tuning spectral clustering*. Advances in Neural Information Processing Systems 17.
-4. Levina, E., & Bickel, P. J. (2004). *Maximum likelihood estimation of intrinsic dimension*. Advances in Neural Information Processing Systems 17.
-5. El Karoui, N., & Wu, H.-T. *Connection graph Laplacian methods can be made robust to noise*. (Reference copy in `references/`.)
-6. DSC 205 course materials and project proposal (stored in `references/DSC205_ProjectProposal.pdf`).
+3. Zelnik-Manor, L., & Perona, P. (2004). *Self-tuning spectral clustering*. NeurIPS 17.
+4. Levina, E., & Bickel, P. J. (2004). *Maximum likelihood estimation of intrinsic dimension*. NeurIPS 17.
+5. El Karoui, N. & Wu, H.-T. *Connection graph Laplacian methods can be made robust to noise*.
+6. DSC 205 course materials and project proposal (`references/DSC205_ProjectProposal.pdf`).
 
-See `docs/references/CITATIONS.md` for the full attribution policy.
+Full report with all tables, figures, and analysis: [`reports/final_report.md`](reports/final_report.md)
 
-## Resume Highlights
+---
 
-- Designed and implemented a spectral embedding pipeline from scratch in Python (numpy, scipy, scikit-learn) with typed configs, deterministic seeding, and structured output artifacts.
-- Developed a bandwidth-stability truncation criterion for diffusion maps that adapts the embedding dimension to noise level, validated on 5 synthetic manifolds across 60+ seeded experiment runs.
-- Showed that the stability-based cutoff selects monotonically fewer dimensions as noise increases (k*: 12→8 on sphere, 8→4 on circle), while the eigengap heuristic remains fixed or ambiguous in the same settings.
-- Integrated a Levina-Bickel intrinsic dimension estimator into the pipeline, producing clean vs noisy dimension estimates that recover true manifold dimension within 15% on clean data (circle: 1.15 vs 1, sphere: 2.25 vs 2, swiss roll: 1.97 vs 2) and quantify noise-induced inflation.
-- Built a reproducible experiment framework with YAML-driven sweep configs, multi-seed aggregation, automated plotting, and a CLI (`nase run` / `nase sweep` / `nase plot`).
-- Implemented evaluation metrics including trustworthiness, continuity, geodesic consistency (Spearman correlation with kNN shortest-path distances), and oracle subspace distance.
-- Maintained a 12-file test suite (49 tests) with pytest covering data generation, graph construction, eigensolvers, cutoff methods, intrinsic dimension estimation, metrics, plotting, and end-to-end runner smoke tests.
+## Skills and Highlights
+
+<table>
+<tr>
+<td width="50%">
+
+**Spectral Methods & Manifold Learning**
+- Diffusion maps pipeline from scratch (kernel construction, alpha-normalization, spectral decomposition)
+- Bandwidth-stability truncation criterion — a novel data-driven alternative to the eigengap heuristic
+- Subspace distance via principal angles for oracle evaluation
+- Levina-Bickel intrinsic dimension estimation
+
+</td>
+<td width="50%">
+
+**Statistical Estimation & Analysis**
+- kNN-based noise amplitude estimation with bias analysis across manifold geometries
+- Empirical validation of theoretical scaling law (k* ~ C/r²) with calibrated constants
+- Multi-metric evaluation: trustworthiness, continuity, geodesic consistency
+- Honest quantification of when methods work and when they fail
+
+</td>
+</tr>
+<tr>
+<td>
+
+**Software Engineering**
+- Modular Python package with typed dataclass configs, YAML-driven experiments, and deep-merge override system
+- CLI with three commands (`run`, `sweep`, `plot`) backed by Typer
+- 49-test pytest suite covering data generation through end-to-end runner smoke tests
+- Pre-commit hooks (ruff lint + format), Makefile automation, deterministic seeding
+
+</td>
+<td>
+
+**Reproducibility & Scientific Computing**
+- 120 seeded experiment runs across 12 configurations, all outputs version-controlled
+- Automated sweep orchestration with multi-seed aggregation (mean/std)
+- Every quantitative claim in the report cites its source JSON file
+- Config-driven pipeline: change a YAML file, get a new experiment with full artifact trail
+
+</td>
+</tr>
+</table>
+
+**Tech stack**: Python, NumPy, SciPy, scikit-learn, Matplotlib, pandas, PyYAML, Typer, pytest, ruff
+
+**Concepts demonstrated**: spectral graph theory, manifold learning, noise robustness, statistical estimation, eigenvalue problems, kNN methods, subspace geometry, experiment design, scientific reproducibility
