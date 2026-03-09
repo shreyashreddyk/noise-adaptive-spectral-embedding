@@ -1,0 +1,146 @@
+[
+  {
+    "manifold": "circle",
+    "D": 3,
+    "r_configured": 0.02,
+    "r_empirical_mean": 0.019841806006879178,
+    "r_knn_simple_mean": 0.013881768454678084,
+    "r_knn_twoscale_mean": 0.006026800273507198,
+    "ratio_knn_simple_to_empirical": 0.6997093873732112
+  },
+  {
+    "manifold": "circle",
+    "D": 3,
+    "r_configured": 0.05,
+    "r_empirical_mean": 0.049604515017197946,
+    "r_knn_simple_mean": 0.024426798546437384,
+    "r_knn_twoscale_mean": 0.012954899431304442,
+    "ratio_knn_simple_to_empirical": 0.49242669888699764
+  },
+  {
+    "manifold": "circle",
+    "D": 3,
+    "r_configured": 0.08,
+    "r_empirical_mean": 0.07936722402751671,
+    "r_knn_simple_mean": 0.03254988458596469,
+    "r_knn_twoscale_mean": 0.018499364486489065,
+    "ratio_knn_simple_to_empirical": 0.4100541004461338
+  },
+  {
+    "manifold": "circle",
+    "D": 3,
+    "r_configured": 0.12,
+    "r_empirical_mean": 0.11905083604127505,
+    "r_knn_simple_mean": 0.04270436089106203,
+    "r_knn_twoscale_mean": 0.025430292251247915,
+    "ratio_knn_simple_to_empirical": 0.35873871295322424
+  },
+  {
+    "manifold": "circle",
+    "D": 3,
+    "r_configured": 0.16,
+    "r_empirical_mean": 0.15873444805503342,
+    "r_knn_simple_mean": 0.0519425758077646,
+    "r_knn_twoscale_mean": 0.03144275885784268,
+    "ratio_knn_simple_to_empirical": 0.32724518486877047
+  },
+  {
+    "manifold": "sphere",
+    "D": 5,
+    "r_configured": 0.02,
+    "r_empirical_mean": 0.019819450433540522,
+    "r_knn_simple_mean": 0.041617959619741234,
+    "r_knn_twoscale_mean": 0.012586823139514964,
+    "ratio_knn_simple_to_empirical": 2.0997396491430638
+  },
+  {
+    "manifold": "sphere",
+    "D": 5,
+    "r_configured": 0.05,
+    "r_empirical_mean": 0.049548626083851306,
+    "r_knn_simple_mean": 0.0529909518090696,
+    "r_knn_twoscale_mean": 0.029844222845872136,
+    "ratio_knn_simple_to_empirical": 1.069519777896347
+  },
+  {
+    "manifold": "sphere",
+    "D": 5,
+    "r_configured": 0.08,
+    "r_empirical_mean": 0.07927780173416209,
+    "r_knn_simple_mean": 0.06592180565749439,
+    "r_knn_twoscale_mean": 0.04263516279112065,
+    "ratio_knn_simple_to_empirical": 0.8315527396672072
+  },
+  {
+    "manifold": "sphere",
+    "D": 5,
+    "r_configured": 0.12,
+    "r_empirical_mean": 0.11891670260124314,
+    "r_knn_simple_mean": 0.08055617855080716,
+    "r_knn_twoscale_mean": 0.0560855968379714,
+    "ratio_knn_simple_to_empirical": 0.6774912246608672
+  },
+  {
+    "manifold": "sphere",
+    "D": 5,
+    "r_configured": 0.16,
+    "r_empirical_mean": 0.15855560346832417,
+    "r_knn_simple_mean": 0.09410870797747473,
+    "r_knn_twoscale_mean": 0.06831794091872982,
+    "ratio_knn_simple_to_empirical": 0.5936013252701773
+  },
+  {
+    "manifold": "swiss_roll",
+    "D": 3,
+    "r_configured": 0.03,
+    "r_empirical_mean": 0.029429952833244753,
+    "r_knn_simple_mean": 0.20650493643781975,
+    "r_knn_twoscale_mean": 0.13066580486792795,
+    "ratio_knn_simple_to_empirical": 7.021700920948891
+  },
+  {
+    "manifold": "swiss_roll",
+    "D": 3,
+    "r_configured": 0.08,
+    "r_empirical_mean": 0.078479874221986,
+    "r_knn_simple_mean": 0.21072659009341072,
+    "r_knn_twoscale_mean": 0.137847087361319,
+    "ratio_knn_simple_to_empirical": 2.6881398565579273
+  },
+  {
+    "manifold": "swiss_roll",
+    "D": 3,
+    "r_configured": 0.16,
+    "r_empirical_mean": 0.15695974844397204,
+    "r_knn_simple_mean": 0.23215488294291914,
+    "r_knn_twoscale_mean": 0.061731689818737875,
+    "ratio_knn_simple_to_empirical": 1.4804381755008655
+  },
+  {
+    "manifold": "torus",
+    "D": 5,
+    "r_configured": 0.02,
+    "r_empirical_mean": 0.019819450433540522,
+    "r_knn_simple_mean": 0.06926958427070036,
+    "r_knn_twoscale_mean": 0.02462689370594005,
+    "ratio_knn_simple_to_empirical": 3.4951595284129
+  },
+  {
+    "manifold": "torus",
+    "D": 5,
+    "r_configured": 0.08,
+    "r_empirical_mean": 0.07927780173416209,
+    "r_knn_simple_mean": 0.09005504486441718,
+    "r_knn_twoscale_mean": 0.052369819780011366,
+    "ratio_knn_simple_to_empirical": 1.1358591471589385
+  },
+  {
+    "manifold": "torus",
+    "D": 5,
+    "r_configured": 0.16,
+    "r_empirical_mean": 0.15855560346832417,
+    "r_knn_simple_mean": 0.12225781487200861,
+    "r_knn_twoscale_mean": 0.08365907416586604,
+    "ratio_knn_simple_to_empirical": 0.7710932496316311
+  }
+]
